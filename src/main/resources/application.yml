@@ -23,7 +23,7 @@ cloud:
 
 application:
   bucket:
-    name: hsp
+    name: ${AWS_S3_BUCKET_NAME}
 
 #------------------------------------------------------------------------------
 # Google reCAPTCHA
