@@ -40,7 +40,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests(a -> a
-                        .antMatchers("/", "/login", "/error", "/built/**", "/images/**").permitAll()
+                        .antMatchers("/", "/login", "/error", "/built/**", "/images/**", "/upload", "/download/**", "/delete/**").permitAll()
                         // TODO: example - block users endpoint generally for all Roles to prevent altering the data in any way from others
                         //.antMatchers(HttpMethod.PUT, "/api/users/**").denyAll()// access("hasAnyAuthority('ROLE_ROOT')")
                         .antMatchers("/api/profile/**").denyAll()
@@ -95,7 +95,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
                             // check if user logs in the first time -> true: save to database
                             if (userRepository.findUserByEmail(map.get("email").toString()) == null) {
-                                User user = new User(map.get("name").toString(), map.get("email").toString(), false);
+                                User user = new User(map.get("name").toString(), map.get("email").toString());
                                 userRepository.save(user);
                             }
                         }
