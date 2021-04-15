@@ -12,6 +12,11 @@ const Routes = () => {
     const [user, setUser] = useState("")
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    const logout = async (e) => {
+        await axios.post("/logout");
+        window.location.href = "http://localhost:8081";
+    };
+
     useEffect(() => {
         (async () => {
             try {
@@ -20,10 +25,9 @@ const Routes = () => {
                 setIsLoggedIn(true);
             } catch (e) {
                 setIsLoggedIn(false);
-                // get Error Message
-                const req = await axios.get("/error?message=true");
-                if (req.data !== "") {
-                    console.error("REASON:", req.data);
+                const errorMessage = await axios.get("/error?message=true");
+                if (errorMessage.data?.length > 0) {
+                    console.error("REASON:", errorMessage.data);
                 }
             }
         })()
@@ -33,7 +37,8 @@ const Routes = () => {
         <BrowserRouter>
             <Switch>
                 <Route exact path="/" render={
-                    (props) => <Home {...props} user={user} loggedIn={isLoggedIn}/>
+                    (props) =>
+                        <Home {...props} user={user} loggedIn={isLoggedIn} onLogout={logout}/>
                 }/>
             </Switch>
         </BrowserRouter>

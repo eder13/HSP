@@ -4,16 +4,10 @@ import {axios} from "../utils/axiosConfig";
 
 const Home = (props) => {
 
-    // TODO: Move this somewhere different (Routes?)
-    const logout = async (e) => {
-        await axios.post("/logout");
-        window.location.href = "http://localhost:8081";
-    };
-
     /**
      * Props
      */
-    const {user, loggedIn} = props;
+    const {user, loggedIn, onLogout} = props;
 
     /**
      * State
@@ -55,6 +49,7 @@ const Home = (props) => {
     };
     const onSubmit = async (e) => {
         e.preventDefault();
+        e.stopPropagation();
         try {
             const req = await axios.post("/test", {name: "Simon"}, recaptchaParams);
             console.log(req.data, req.status);
@@ -91,7 +86,7 @@ const Home = (props) => {
                     <input type="submit" value="submit"/>
                 </form>
 
-                <button onClick={logout}>Logout</button>
+                <button onClick={onLogout}>Logout</button>
             </Fragment>
         );
     } else {
