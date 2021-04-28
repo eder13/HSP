@@ -93,6 +93,7 @@ const Home = (props) => {
         return (
             <Fragment>
                 <h1>Login</h1>
+                <b>HMR Support</b>
                 <div className="container">
                     <div>
                         With Google: <a href="/oauth2/authorization/google">click here</a>
