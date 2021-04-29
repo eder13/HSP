@@ -2,6 +2,7 @@ package com.springreact.template.security;
 
 import com.springreact.template.db.User;
 import com.springreact.template.db.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,6 +34,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         this.userRepository = userRepository;
     }
 
+    @Value("${domain.url}")
+    private String domainUrl;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -57,18 +61,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                                         "<!DOCTYPE html>" +
                                         "<html lang=\"en\">" +
                                         "<head>" +
-                                            "<meta name=\"viewport\" content=\"width-device-width, initial-scale=1.0\">" +
-                                            /// TODO: FOR DEPLOYMENT REPLACE DOMAIN URL HERE (1)
-                                            "<meta http-equiv=\"refresh\" content=\"5;url=http://localhost:8081/login\">" +
-                                            /// TODO: Replace Title
-                                            "<title>my title</title>" +
+                                        "<meta name=\"viewport\" content=\"width-device-width, initial-scale=1.0\">" +
+                                        "<meta http-equiv=\"refresh\" content=\"5;url=" + domainUrl + "/login\">" +
+                                        "<title>Redirect</title>" +
                                         "</head>" +
                                         "<body style=\"padding-left: 0.5rem;\">" +
-                                            "<p>" +
-                                                "You are being redirected to the Login Page.<br>" +
-                                                /// TODO: FOR DEPLOYMENT REPLACE DOMAIN URL HERE (2)
-                                                "If nothing happens <a href=\"http://localhost:8081/login\">click here</a>." +
-                                            "</p>" +
+                                        "<p>" +
+                                        "You are being redirected to the Login Page.<br>" +
+                                        "If nothing happens <a href=\"" + domainUrl + "/login\">click here</a>." +
+                                        "</p>" +
                                         "</body>" +
                                         "</html>");
                             }

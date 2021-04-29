@@ -24,7 +24,7 @@ const Home = (props) => {
         formData.append('file', input.files[0]);
 
         try {
-            const result = await axios.post('http://localhost:8081/upload', formData, {
+            const result = await axios.post("/upload", formData, {
                 headers: {
                     "Content-Type": "multipart/mixed"
                 }
@@ -70,9 +70,7 @@ const Home = (props) => {
                         <p><strong><em>Please select a file</em></strong></p>
                     )}
 
-                    <input type="file" name="file" onChange={e =>
-                        e.target.value.length > 0 ? setIsSelected(true) : setIsSelected(false)
-                    }/>
+                    <input type="file" name="file" onChange={e => setIsSelected(e.target.value.length > 0)}/>
 
                     <div className="g-recaptcha" data-sitekey="6Lce_ZsaAAAAAE9qyYGAWPQ1ZCpWrVSv3fFl-I7d">{}</div>
                     <div>
@@ -93,7 +91,7 @@ const Home = (props) => {
         return (
             <Fragment>
                 <h1>Login</h1>
-                <b>HMR Support</b>
+                <b>HMR Support YEA</b>
                 <div className="container">
                     <div>
                         With Google: <a href="/oauth2/authorization/google">click here</a>
