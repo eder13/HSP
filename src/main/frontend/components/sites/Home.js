@@ -1,105 +1,16 @@
-import React, {Fragment, useState} from 'react';
-import Reaptcha from "reaptcha";
-import {axios} from "../utils/axiosConfig";
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import AuthContext from '../../stores/AuthStore';
 
-const Home = (props) => {
+const Home = () => {
+    const { isLoggedIn } = useContext(AuthContext);
 
-    /**
-     * Props
-     */
-    const {user, loggedIn, onLogout} = props;
-
-    /**
-     * State
-     */
-    const [recaptchaParams, setRecaptchaParams] = useState({});
-    const [isSelected, setIsSelected] = useState(false);
-
-    const handleSubmission = async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const input = document.querySelector('input[type="file"]');
-        const formData = new FormData();
-        formData.append('file', input.files[0]);
-
-        try {
-            const result = await axios.post("/upload", formData, {
-                headers: {
-                    "Content-Type": "multipart/mixed"
-                }
-            });
-            console.log('Success:', result);
-        } catch (e) {
-            console.log('Error:', e);
-        }
-    };
-
-    /* TODO: Example with Captcha validation (1) */
-    const onVerify = recaptchaResponse => {
-        setRecaptchaParams({
-            params: {
-                "g-recaptcha-response": recaptchaResponse
-            }
-        });
-    };
-    const onExpire = () => {
-        console.log('Check expired, please validate again');
-        setRecaptchaParams({});
-    };
-    const onSubmit = async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        try {
-            const req = await axios.post("/test", {name: "Simon"}, recaptchaParams);
-            console.log(req.data, req.status);
-        } catch (e) {
-            console.error(e.response.data, e.response.status);
-        }
-    };
-
-    /**
-     * Render
-     */
-    if (loggedIn) {
-        return (
-            <Fragment>
-                <div>Hello {user}</div>
-                {<form onSubmit={handleSubmission}>
-                    {!isSelected && (
-                        <p><strong><em>Please select a file</em></strong></p>
-                    )}
-
-                    <input type="file" name="file" onChange={e => setIsSelected(e.target.value.length > 0)}/>
-
-                    <div className="g-recaptcha" data-sitekey="6Lce_ZsaAAAAAE9qyYGAWPQ1ZCpWrVSv3fFl-I7d">{}</div>
-                    <div>
-                        <button disabled={!isSelected} type="submit">Submit</button>
-                    </div>
-                </form>}
-
-                {/* TODO: Example with Captcha validation (2) */}
-                <form onSubmit={onSubmit}>
-                    <Reaptcha sitekey={process.env.CAPTCHA_SITE_KEY} onVerify={onVerify} onExpire={onExpire}/>
-                    <input type="submit" value="submit"/>
-                </form>
-
-                <button onClick={onLogout}>Logout</button>
-            </Fragment>
-        );
-    } else {
-        return (
-            <Fragment>
-                <h1>Login</h1>
-                <b>HMR Support YEA</b>
-                <div className="container">
-                    <div>
-                        With Google: <a href="/oauth2/authorization/google">click here</a>
-                    </div>
-                </div>
-            </Fragment>
-        );
-    }
-}
+    return (
+        <>
+            <h1>This App is great!</h1>
+            {isLoggedIn && <Link to="/dash">Proceed to site</Link>}
+        </>
+    );
+};
 
 export default Home;

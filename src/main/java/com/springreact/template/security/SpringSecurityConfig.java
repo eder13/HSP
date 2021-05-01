@@ -62,13 +62,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                                         "<html lang=\"en\">" +
                                         "<head>" +
                                         "<meta name=\"viewport\" content=\"width-device-width, initial-scale=1.0\">" +
-                                        "<meta http-equiv=\"refresh\" content=\"5;url=" + domainUrl + "/login\">" +
+                                        "<meta http-equiv=\"refresh\" content=\"5;url=" + domainUrl + "\">" +
                                         "<title>Redirect</title>" +
                                         "</head>" +
                                         "<body style=\"padding-left: 0.5rem;\">" +
                                         "<p>" +
                                         "You are being redirected to the Login Page.<br>" +
-                                        "If nothing happens <a href=\"" + domainUrl + "/login\">click here</a>." +
+                                        "If nothing happens <a href=\"" + domainUrl + "\">click here</a>." +
                                         "</p>" +
                                         "</body>" +
                                         "</html>");

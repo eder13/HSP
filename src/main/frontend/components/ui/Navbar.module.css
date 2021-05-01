@@ -1,0 +1,23 @@
+.navbar {
+    width: 100vw;
+    height: 50px;
+    color: white;
+    background-color: tomato;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbarLeft {
+    padding-left: 2rem;
+}
+
+.navbarRight {
+    padding-right: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.navbarUser {
+    margin-right: 1rem;
+}
