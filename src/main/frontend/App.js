@@ -1,12 +1,23 @@
+import { combineReducers, configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import React from 'react';
 import AppRouter from './components/routers/AppRouter';
-import AuthContext from './stores/AuthStore';
+import userData from "./reducers/authReducer";
+import { actionSetUser } from './actions/authActions';
+import { Provider } from "react-redux";
+
+const store = configureStore({
+    reducer: combineReducers({ user: userData }),
+    middleware: [...getDefaultMiddleware()],
+});
 
 const App = ({ isLoggedIn, user }) => {
+
+    store.dispatch(actionSetUser(isLoggedIn, user));
+
     return (
-        <AuthContext.Provider value={{ isLoggedIn, user }}>
+        <Provider store={store}>
             <AppRouter />
-        </AuthContext.Provider>
+        </Provider>
     );
 };
 

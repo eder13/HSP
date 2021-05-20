@@ -76,6 +76,12 @@ module.exports = {
                     useRelativePath: true,
                 },
             },
+            { 
+                test: /\.jsx?$/, 
+                resolve: { 
+                    extensions: ['.js', '.jsx'] 
+                } 
+            },
         ],
     },
     plugins: [
