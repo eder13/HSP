@@ -22,6 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,7 +98,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
                             // check if user logs in the first time -> true: save to database
                             if (userRepository.findUserByEmail(map.get("email").toString()) == null) {
-                                User user = new User(map.get("name").toString(), map.get("email").toString());
+                                User user = new User(map.get("email").toString(), 0, new Date(), null, null);
                                 userRepository.save(user);
                             }
                         }
