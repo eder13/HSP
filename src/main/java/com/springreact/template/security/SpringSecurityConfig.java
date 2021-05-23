@@ -4,7 +4,9 @@ import com.springreact.template.db.User;
 import com.springreact.template.db.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
@@ -27,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserRepository userRepository;
@@ -48,6 +51,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers("/", "/login", "/error", "/built/**", "/images/**", "/upload", "/download/**", "/delete/**").permitAll()
                         // TODO: example - block users endpoint generally for all Roles to prevent altering the data in any way from others
                         //.antMatchers(HttpMethod.PUT, "/api/users/**").denyAll()// access("hasAnyAuthority('ROLE_ROOT')")
+                        .antMatchers(HttpMethod.POST, "/api/uploads/**").denyAll()
+                        .antMatchers(HttpMethod.PUT, "/api/uploads/{\\d+}/**").denyAll()
+                        .antMatchers(HttpMethod.PATCH, "/api/uploads/{id}/**").access("@accessHandler.isOwner(authentication, #id)")
                         .antMatchers("/api/profile/**").denyAll()
                         .anyRequest().authenticated()
                 )
