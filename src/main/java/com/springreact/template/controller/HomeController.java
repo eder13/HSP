@@ -21,6 +21,8 @@ import java.util.Map;
 @Controller
 public class HomeController {
 
+    public static int MAX_UPLOADS = 20;
+
     private final StorageService service;
     private final UserRepository userRepository;
     private final RecaptchaValidator recaptchaValidator;
@@ -79,8 +81,42 @@ public class HomeController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam(value = "file") MultipartFile file) {
-        return new ResponseEntity<>(service.uploadFile(file), HttpStatus.OK);
+    public ResponseEntity<String> uploadFile(@AuthenticationPrincipal OAuth2User principal, @RequestParam(value = "file") MultipartFile file, HttpServletRequest request) {
+
+        // get Currently logged In User Data
+        User user = userRepository.findUserByEmail(principal.getAttribute("email"));
+        HttpHeaders respHeader = new HttpHeaders();
+        respHeader.set("Content-Type", "application/json");
+
+        if(user.getUploadCount() <= MAX_UPLOADS) {
+
+            if (recaptchaValidator.validate(request).isSuccess()) {
+
+                /// TODO: Malware Scan (v0.0.2)
+
+                String response = service.uploadFile(file, user);
+
+                return ResponseEntity.ok()
+                        .headers(respHeader)
+                        .body(response);
+
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .headers(respHeader)
+                        .body("{" +
+                                "\"message\": " + "\"failed to validate captcha.\"" +
+                                "}"
+                        );
+            }
+
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .headers(respHeader)
+                    .body("{" +
+                            "\"message\": " + "\"You exceeded your max Uploads.\"" +
+                            "}"
+                    );
+        }
     }
 
     @PostMapping("/test")

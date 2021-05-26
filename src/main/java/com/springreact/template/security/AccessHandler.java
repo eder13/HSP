@@ -20,14 +20,19 @@ public class AccessHandler {
 
     public boolean isOwner(Authentication a, Long id) {
 
-        System.out.println("isOwner Check");
-
         if (a instanceof OAuth2AuthenticationToken) {
             // get email of currently logged in user
             OAuth2User oauth2user = ((OAuth2AuthenticationToken) a).getPrincipal();
             String email = oauth2user.getAttribute("email");
 
             Long foundId = uploadRepository.getUploadByUserAndUploadId(userRepository.findUserByEmail(email), id);
+
+            System.out.println("#####################################################################");
+            System.out.println("isOwner Check");
+            System.out.print("User Access Allowed: ");
+            System.out.println(foundId != null);
+            System.out.println("#####################################################################");
+
             return foundId != null;
 
         } else {

@@ -4,7 +4,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.Date;
 
 public interface UploadRepository extends PagingAndSortingRepository<Upload, Long> {
 
@@ -14,6 +15,15 @@ public interface UploadRepository extends PagingAndSortingRepository<Upload, Lon
     Long getUploadByUserAndUploadId (
             @Param("user") User user,
             @Param("id") Long id
+    );
+
+    // query for checking if only "name" was altered (only allowed PATCH)
+    @RestResource(exported = false)
+    @Query(value = "SELECT u.user.id FROM Upload u WHERE u.id = :id AND u.fileName = :fileName AND u.createdOn = :createdOn")
+    Long getUploadByIdAndFileNameAndCreatedOn(
+            @Param("id") Long id,
+            @Param("fileName") String fileName,
+            @Param("createdOn") Date createdOn
     );
 
     // save

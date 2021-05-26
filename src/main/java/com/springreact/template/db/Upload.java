@@ -1,6 +1,7 @@
 package com.springreact.template.db;
 
 import com.sun.istack.NotNull;
+import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -27,6 +28,7 @@ public class Upload {
     private User user;
 
     @ManyToMany(mappedBy = "downloads", fetch = FetchType.EAGER)
+    @RestResource(path = "downloads", rel = "downloads")
     private Set<User> users;
 
     public Upload(String name, String fileName, Date createdOn, User user, Set<User> users) {

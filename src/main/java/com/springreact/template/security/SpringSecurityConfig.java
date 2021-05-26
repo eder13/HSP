@@ -49,12 +49,28 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests(a -> a
                         .antMatchers("/", "/login", "/error", "/built/**", "/images/**", "/upload", "/download/**", "/delete/**").permitAll()
-                        // TODO: example - block users endpoint generally for all Roles to prevent altering the data in any way from others
-                        //.antMatchers(HttpMethod.PUT, "/api/users/**").denyAll()// access("hasAnyAuthority('ROLE_ROOT')")
+
+                        /**
+                         *  /api/users REST Endpoints
+                         */
+                        .antMatchers(HttpMethod.POST, "/api/users/**").denyAll()
+                        .antMatchers(HttpMethod.PUT, "/api/users/**").denyAll()
+                        .antMatchers(HttpMethod.PATCH, "/api/users/**").denyAll()
+                        .antMatchers(HttpMethod.DELETE, "/api/users/**").denyAll() // TODO: v0.0.2 (GDPR)
+
+                        /**
+                         *  /api/uploads REST Endpoints
+                         */
                         .antMatchers(HttpMethod.POST, "/api/uploads/**").denyAll()
-                        .antMatchers(HttpMethod.PUT, "/api/uploads/{\\d+}/**").denyAll()
+                        .antMatchers(HttpMethod.PUT, "/api/uploads/**").denyAll()
                         .antMatchers(HttpMethod.PATCH, "/api/uploads/{id}/**").access("@accessHandler.isOwner(authentication, #id)")
+                        .antMatchers(HttpMethod.DELETE, "/api/uploads/{\\d+}/**").denyAll()
+
+                        /**
+                         * /api/profile can be always disabled
+                         */
                         .antMatchers("/api/profile/**").denyAll()
+
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(e -> e
