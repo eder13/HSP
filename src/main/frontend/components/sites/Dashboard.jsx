@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Reaptcha from 'reaptcha';
-import { axios } from '../util/axiosConfig';
+import {axios} from '../util/axiosConfig';
 
 const Dashboard = () => {
     const [recaptchaParams, setRecaptchaParams] = useState({});
@@ -19,6 +19,10 @@ const Dashboard = () => {
                 headers: {
                     'Content-Type': 'multipart/mixed',
                 },
+                onUploadProgress: (progressEvent) => {
+                    const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                    console.log(percentCompleted)
+                }
             });
             console.log('Success:', result);
         } catch (e) {
@@ -26,35 +30,58 @@ const Dashboard = () => {
         }
     };
 
-    /* TODO: Example with Captcha validation (1) */
+    const handleCaptcha = async (e) => {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        try {
+            const result = await axios.post('/captcha', "", {
+
+                params: {
+                    ...recaptchaParams
+                },
+            });
+            console.log(result);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     const onVerify = (recaptchaResponse) => {
         setRecaptchaParams({
-            params: {
-                'g-recaptcha-response': recaptchaResponse,
-            },
+            'g-recaptcha-response': recaptchaResponse,
         });
     };
+
     const onExpire = () => {
         console.log('Check expired, please validate again');
         setRecaptchaParams({});
     };
-    const onSubmit = async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        try {
-            const req = await axios.post(
-                '/test',
-                { name: 'Simon' },
-                recaptchaParams
-            );
-            console.log(req.data, req.status);
-        } catch (e) {
-            console.error(e.response.data, e.response.status);
-        }
-    };
 
     return (
         <>
+            <div>Validate Captcha</div>
+            <form onSubmit={handleCaptcha}>
+                <div
+                    className="g-recaptcha"
+                    data-sitekey="6Lce_ZsaAAAAAE9qyYGAWPQ1ZCpWrVSv3fFl-I7d"
+                >
+                    {}
+                </div>
+
+                <Reaptcha
+                    sitekey={process.env.CAPTCHA_SITE_KEY}
+                    onVerify={onVerify}
+                    onExpire={onExpire}
+                    execute={bla}
+                />
+
+                <div>
+                    <input type="submit" value="Validate"/>
+                </div>
+            </form>
+
             <div>Upload File</div>
             {
                 <form onSubmit={handleSubmission}>
@@ -74,29 +101,11 @@ const Dashboard = () => {
                         }
                     />
 
-                    <div
-                        className="g-recaptcha"
-                        data-sitekey="6Lce_ZsaAAAAAE9qyYGAWPQ1ZCpWrVSv3fFl-I7d"
-                    >
-                        {}
-                    </div>
                     <div>
-                        <button disabled={!isSelected} type="submit">
-                            Submit
-                        </button>
+                        <input disabled={!isSelected} type="submit" value="Submit"/>
                     </div>
                 </form>
             }
-
-            {/* TODO: Example with Captcha validation (2) */}
-            <form onSubmit={onSubmit}>
-                <Reaptcha
-                    sitekey={process.env.CAPTCHA_SITE_KEY}
-                    onVerify={onVerify}
-                    onExpire={onExpire}
-                />
-                <input type="submit" value="submit" />
-            </form>
         </>
     );
 };

@@ -27,6 +27,8 @@ public class HomeController {
     private final UserRepository userRepository;
     private final RecaptchaValidator recaptchaValidator;
 
+    public static boolean validated = false;
+
     public HomeController(UserRepository userRepository, StorageService service, @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") RecaptchaValidator recaptchaValidator) {
         this.userRepository = userRepository;
         this.service = service;
@@ -80,8 +82,32 @@ public class HomeController {
         }
     }
 
+
+    // if validated
+    // /validate - when done uploading - set valitaded to false again
+    @PostMapping("/captcha")
+    public ResponseEntity<String> validateCaptcha(HttpServletRequest request) {
+        validated = recaptchaValidator.validate(request).isSuccess();
+
+        HttpHeaders respHeader = new HttpHeaders();
+        respHeader.set("Content-Type", "application/json");
+
+        if(validated) {
+            return ResponseEntity.ok()
+                    .headers(respHeader)
+                    .body("{}");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .headers(respHeader)
+                    .body("{" +
+                            "\"message\": " + "\"failed to validate captcha.\"" +
+                            "}"
+                    );
+        }
+    }
+
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@AuthenticationPrincipal OAuth2User principal, @RequestParam(value = "file") MultipartFile file, HttpServletRequest request) {
+    public ResponseEntity<String> uploadFile(@AuthenticationPrincipal OAuth2User principal, @RequestParam(value = "file") MultipartFile file) {
 
         // get Currently logged In User Data
         User user = userRepository.findUserByEmail(principal.getAttribute("email"));
@@ -90,11 +116,24 @@ public class HomeController {
 
         if(user.getUploadCount() <= MAX_UPLOADS) {
 
-            if (recaptchaValidator.validate(request).isSuccess()) {
+            if (validated) {
 
                 /// TODO: Malware Scan (v0.0.2)
 
                 String response = service.uploadFile(file, user);
+
+                if(response.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .headers(respHeader)
+                            .body("{" +
+                                    "\"message\": " + "\"invalid file type.\"" +
+                                    "}"
+                            );
+                } else if(!response.contains("url")) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .headers(respHeader)
+                            .body(response);
+                }
 
                 return ResponseEntity.ok()
                         .headers(respHeader)
