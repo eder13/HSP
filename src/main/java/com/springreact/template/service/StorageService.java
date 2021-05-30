@@ -61,7 +61,6 @@ public class StorageService {
         try {
             tm.upload(putObjectRequest).waitForCompletion();
             fileObject.delete(); // delete temporary file
-            HomeController.validated = false;
             // save to database
             int uploadNumber = (int)Math.floor(Math.random()*(99999-11111+1)+11111);
             String tempName = "My Upload #" + uploadNumber;
@@ -69,7 +68,6 @@ public class StorageService {
             return "{ \"url\": \"/api/uploads/" + up.getId() + "\" }";
         }
         catch (InterruptedException e) {
-            HomeController.validated = false;
             e.printStackTrace();
             return "{ \"message\": \"" + e.getMessage() + "\" }";
         }

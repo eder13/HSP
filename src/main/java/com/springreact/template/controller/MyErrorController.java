@@ -18,6 +18,7 @@ public class MyErrorController implements ErrorController {
     @ResponseBody
     @RequestMapping("/error")
     public Object error(@RequestParam(required = false) String message, HttpServletRequest httpServletRequest) {
+        httpServletRequest.getSession().setAttribute("validated", false);
 
         // if no parameter applied (=standard 404 error), sent back index.html
         // else return JSON with error text

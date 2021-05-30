@@ -74,7 +74,6 @@ const Dashboard = () => {
                     sitekey={process.env.CAPTCHA_SITE_KEY}
                     onVerify={onVerify}
                     onExpire={onExpire}
-                    execute={bla}
                 />
 
                 <div>

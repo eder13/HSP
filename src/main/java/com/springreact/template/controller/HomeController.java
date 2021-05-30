@@ -27,8 +27,6 @@ public class HomeController {
     private final UserRepository userRepository;
     private final RecaptchaValidator recaptchaValidator;
 
-    public static boolean validated = false;
-
     public HomeController(UserRepository userRepository, StorageService service, @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") RecaptchaValidator recaptchaValidator) {
         this.userRepository = userRepository;
         this.service = service;
@@ -36,18 +34,21 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String index() {
+    public String index(HttpServletRequest request) {
+        request.getSession().setAttribute("validated", false);
         return "index";
     }
 
     @ResponseBody
     @GetMapping("/user")
-    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
+    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal, HttpServletRequest request) {
+        request.getSession().setAttribute("validated", false);
         return Collections.singletonMap("email", principal.getAttribute("email"));
     }
 
     @GetMapping("/userid")
-    public ResponseEntity<String> userId(@RequestParam("email") String email, @AuthenticationPrincipal OAuth2User principal) {
+    public ResponseEntity<String> userId(@RequestParam("email") String email, @AuthenticationPrincipal OAuth2User principal, HttpServletRequest request) {
+        request.getSession().setAttribute("validated", false);
 
         // security check: users can only query their own id
         Map<String, Object> map = Collections.singletonMap("email", principal.getAttribute("email"));
@@ -86,11 +87,13 @@ public class HomeController {
     // if validated
     // /validate - when done uploading - set valitaded to false again
     @PostMapping("/captcha")
-    public ResponseEntity<String> validateCaptcha(HttpServletRequest request) {
-        validated = recaptchaValidator.validate(request).isSuccess();
+    public ResponseEntity<String> validateCaptcha(@AuthenticationPrincipal OAuth2User principal, HttpServletRequest request) {
 
         HttpHeaders respHeader = new HttpHeaders();
         respHeader.set("Content-Type", "application/json");
+
+        boolean validated = recaptchaValidator.validate(request).isSuccess();
+        request.getSession().setAttribute("validated", validated);
 
         if(validated) {
             return ResponseEntity.ok()
@@ -107,7 +110,7 @@ public class HomeController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@AuthenticationPrincipal OAuth2User principal, @RequestParam(value = "file") MultipartFile file) {
+    public ResponseEntity<String> uploadFile(@AuthenticationPrincipal OAuth2User principal, @RequestParam(value = "file") MultipartFile file, HttpServletRequest request) {
 
         // get Currently logged In User Data
         User user = userRepository.findUserByEmail(principal.getAttribute("email"));
@@ -116,13 +119,14 @@ public class HomeController {
 
         if(user.getUploadCount() <= MAX_UPLOADS) {
 
-            if (validated) {
+            if ((boolean) request.getSession().getAttribute("validated")) {
 
                 /// TODO: Malware Scan (v0.0.2)
 
                 String response = service.uploadFile(file, user);
 
                 if(response.isEmpty()) {
+                    request.getSession().setAttribute("validated", false);
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .headers(respHeader)
                             .body("{" +
@@ -130,16 +134,21 @@ public class HomeController {
                                     "}"
                             );
                 } else if(!response.contains("url")) {
+                    request.getSession().setAttribute("validated", false);
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                             .headers(respHeader)
                             .body(response);
                 }
+
+                request.getSession().setAttribute("validated", false);
+                //userRepository.save() // update counter
 
                 return ResponseEntity.ok()
                         .headers(respHeader)
                         .body(response);
 
             } else {
+                request.getSession().setAttribute("validated", false);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .headers(respHeader)
                         .body("{" +
@@ -149,6 +158,7 @@ public class HomeController {
             }
 
         } else {
+            request.getSession().setAttribute("validated", false);
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .headers(respHeader)
                     .body("{" +
@@ -183,7 +193,8 @@ public class HomeController {
     }
 
     @GetMapping("/download/{fileName}")
-    public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String fileName) {
+    public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+        request.getSession().setAttribute("validated", false);
         byte[] data = service.downloadFile(fileName);
         ByteArrayResource resource = new ByteArrayResource(data);
         return ResponseEntity
@@ -195,7 +206,8 @@ public class HomeController {
     }
 
     @DeleteMapping("/delete/{fileName}")
-    public ResponseEntity<String> deleteFile(@PathVariable String fileName) {
+    public ResponseEntity<String> deleteFile(@PathVariable String fileName, HttpServletRequest request) {
+        request.getSession().setAttribute("validated", false);
         return new ResponseEntity<>(service.deleteFile(fileName), HttpStatus.OK);
     }
 
