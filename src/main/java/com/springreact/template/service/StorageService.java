@@ -86,7 +86,7 @@ public class StorageService {
 
     public String deleteFile(String fileName) {
         s3Client.deleteObject(bucketName, fileName);
-        return fileName + " removed ...";
+        return "{\"message\": \"removed " + fileName + " successfully \"}";
     }
 
     private File convertMultiPartFileToFile(MultipartFile file) {

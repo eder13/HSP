@@ -1,6 +1,8 @@
 package com.springreact.template.controller;
 
 import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
+import com.springreact.template.db.Upload;
+import com.springreact.template.db.UploadRepository;
 import com.springreact.template.db.User;
 import com.springreact.template.db.UserRepository;
 import com.springreact.template.service.StorageService;
@@ -15,8 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.Map;
+import java.util.Set;
 
 @Controller
 public class HomeController {
@@ -25,11 +26,13 @@ public class HomeController {
 
     private final StorageService service;
     private final UserRepository userRepository;
+    private final UploadRepository uploadRepository;
     private final RecaptchaValidator recaptchaValidator;
 
-    public HomeController(UserRepository userRepository, StorageService service, @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") RecaptchaValidator recaptchaValidator) {
+    public HomeController(UserRepository userRepository, StorageService service, UploadRepository uploadRepository, @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") RecaptchaValidator recaptchaValidator) {
         this.userRepository = userRepository;
         this.service = service;
+        this.uploadRepository = uploadRepository;
         this.recaptchaValidator = recaptchaValidator;
     }
 
@@ -41,51 +44,23 @@ public class HomeController {
 
     @ResponseBody
     @GetMapping("/user")
-    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal, HttpServletRequest request) {
-        request.getSession().setAttribute("validated", false);
-        return Collections.singletonMap("email", principal.getAttribute("email"));
-    }
-
-    @GetMapping("/userid")
-    public ResponseEntity<String> userId(@RequestParam("email") String email, @AuthenticationPrincipal OAuth2User principal, HttpServletRequest request) {
+    public ResponseEntity<String> user(@AuthenticationPrincipal OAuth2User principal, HttpServletRequest request) {
         request.getSession().setAttribute("validated", false);
 
-        // security check: users can only query their own id
-        Map<String, Object> map = Collections.singletonMap("email", principal.getAttribute("email"));
-        String currentUserMail = map.get("email").toString();
+        User user = userRepository.findUserByEmail(principal.getAttribute("email"));
 
-        if (!currentUserMail.equals(email)) {
-
-            HttpHeaders respHeader = new HttpHeaders();
-            respHeader.set("Content-Type", "application/json");
-
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .headers(respHeader)
-                    .body("{" +
-                            "\"error\": " + "\"You do not have the privileges to search ids from other Users!\"" +
-                            "}");
-
-        }
-
-        User user = userRepository.findUserByEmail(email);
         HttpHeaders respHeader = new HttpHeaders();
         respHeader.set("Content-Type", "application/json");
 
-        if (user != null) {
-            return ResponseEntity.ok()
-                    .headers(respHeader)
-                    .body("{" +
-                            "\"id\": " + user.getId() +
-                            "}"
-                    );
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok()
+                .headers(respHeader)
+                .body("{" +
+                        "\"id\": " + user.getId() + "," +
+                        "\"email\":" + "\"" + user.getEmail() + "\"" +
+                        "}"
+                );
     }
 
-
-    // if validated
-    // /validate - when done uploading - set valitaded to false again
     @PostMapping("/captcha")
     public ResponseEntity<String> validateCaptcha(@AuthenticationPrincipal OAuth2User principal, HttpServletRequest request) {
 
@@ -141,7 +116,8 @@ public class HomeController {
                 }
 
                 request.getSession().setAttribute("validated", false);
-                //userRepository.save() // update counter
+                user.setUploadCount(user.getUploadCount()+1);
+                userRepository.save(user);
 
                 return ResponseEntity.ok()
                         .headers(respHeader)
@@ -168,35 +144,29 @@ public class HomeController {
         }
     }
 
-    @PostMapping("/test")
-    public ResponseEntity<String> validateCaptcha(@RequestBody String name, HttpServletRequest request) {
-        HttpHeaders respHeader = new HttpHeaders();
-        respHeader.set("Content-Type", "application/json");
+    @GetMapping("/download/{fileName}")
+    public ResponseEntity<ByteArrayResource> downloadFile(@AuthenticationPrincipal OAuth2User principal, @PathVariable String fileName, HttpServletRequest request) {
+        request.getSession().setAttribute("validated", false);
 
-        System.out.println(name);
+        User user = userRepository.findUserByEmail(principal.getAttribute("email"));
+        Upload upload = uploadRepository.findUploadByFileName(fileName);
 
-        if (recaptchaValidator.validate(request).isSuccess()) {
-            return ResponseEntity.ok()
-                    .headers(respHeader)
-                    .body("{" +
-                            "\"message\": " + "\"successfully uploaded!\"" +
-                            "}"
-                    );
+        if(upload == null) {
+            return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .headers(respHeader)
-                .body("{" +
-                        "\"message\": " + "\"failed to validate captcha\"" +
-                        "}"
-                );
-    }
+        if(uploadRepository.getUploadByUserAndUploadId(user, upload.getId()) == null) {
+            Set<Upload> downloads = user.getDownloads();
+            if(!downloads.contains(upload)) {
+                downloads.add(upload);
+                user.setDownloads(downloads);
+                userRepository.save(user);
+            }
+        }
 
-    @GetMapping("/download/{fileName}")
-    public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
-        request.getSession().setAttribute("validated", false);
         byte[] data = service.downloadFile(fileName);
         ByteArrayResource resource = new ByteArrayResource(data);
+
         return ResponseEntity
                 .ok()
                 .contentLength(data.length)
@@ -206,9 +176,51 @@ public class HomeController {
     }
 
     @DeleteMapping("/delete/{fileName}")
-    public ResponseEntity<String> deleteFile(@PathVariable String fileName, HttpServletRequest request) {
+    public ResponseEntity<String> deleteFile(@AuthenticationPrincipal OAuth2User principal, @PathVariable String fileName, HttpServletRequest request) {
         request.getSession().setAttribute("validated", false);
+
+        // check if the user is the owner of the Upload
+        User user = userRepository.findUserByEmail(principal.getAttribute("email"));
+        Upload upload = uploadRepository.findUploadByFileName(fileName);
+
+        if(upload == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if(uploadRepository.getUploadByUserAndUploadId(user, upload.getId()) == null) {
+
+            HttpHeaders respHeader = new HttpHeaders();
+            respHeader.set("Content-Type", "application/json");
+
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .headers(respHeader)
+                    .body("{" +
+                            "\"message\": " + "\"You can not delete Uploads that don't belong to you.\"" +
+                            "}"
+                    );
+        }
+
+        // 1. delete all associations
+        for(User u : userRepository.findAll()) {
+            if(u.getDownloads().contains(upload)) {
+                Set<Upload> downloads = u.getDownloads();
+                downloads.remove(upload);
+                u.setDownloads(downloads);
+                userRepository.save(u);
+            }
+        }
+
+        // 2. delete the user association
+        Set<Upload> uploads = user.getUploads();
+        uploads.remove(upload);
+        user.setUploads(uploads);
+        user.setUploadCount(Math.max(user.getUploadCount() - 1, 0));
+        userRepository.save(user);
+
+        // 3. delete the upload database entry
+        uploadRepository.delete(upload);
+
+        // 4. delete it inside the bucket
         return new ResponseEntity<>(service.deleteFile(fileName), HttpStatus.OK);
     }
-
 }

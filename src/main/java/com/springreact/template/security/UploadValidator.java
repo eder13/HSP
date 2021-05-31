@@ -31,6 +31,7 @@ public class UploadValidator implements Validator {
             Upload upload = (Upload) target;
 
             // Only allow the field 'name' to be altered (PATCH)
+            // TODO: Add Description Field to be altered
             Long foundId = uploadRepository.getUploadByIdAndFileNameAndCreatedOn(upload.getId(), upload.getFileName(), upload.getCreatedOn());
             boolean denyAltering = foundId == null;
 

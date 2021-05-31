@@ -1,9 +1,9 @@
 import ActionTypes from './../constants/actionTypes';
 
-export const actionSetUser = (isLoggedIn, user) => {
+export const actionSetUser = (id, user, isLoggedIn) => {
     return {
         type: ActionTypes.STORE_USER_INFO,
-        payload: { isLoggedIn, username: user },
+        payload: { id, isLoggedIn, username: user,  },
     };
 };
 

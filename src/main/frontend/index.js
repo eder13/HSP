@@ -8,12 +8,14 @@ import 'normalize.css';
 (async () => {
     let isLoggedIn = false;
     let user = '';
+    let id = -1;
 
     try {
         const req = await axios.get('/user');
         if (req.status === 200) {
             isLoggedIn = true;
             user = req.data.email;
+            id = req.data.id;
             console.log('[auth]: user is authenticated');
         } else {
             throw new Error();
@@ -29,7 +31,7 @@ import 'normalize.css';
         const render = (App) => {
             ReactDOM.render(
                 <AppContainer>
-                    <App user={user} isLoggedIn={isLoggedIn} />
+                    <App id={id} user={user} isLoggedIn={isLoggedIn} />
                 </AppContainer>,
                 document.getElementById('root')
             );

@@ -26,6 +26,13 @@ public interface UploadRepository extends PagingAndSortingRepository<Upload, Lon
             @Param("createdOn") Date createdOn
     );
 
+    // query fro getting the Upload based on fileName
+    @RestResource(exported = false)
+    @Query(value = "SELECT u FROM Upload u WHERE u.fileName = :fileName")
+    Upload findUploadByFileName(
+            @Param("fileName") String fileName
+    );
+
     // save
     // Only allow to PATCH if Owner (POST, PUT generally blocked)
     // this check is already done inside securityConfig itself

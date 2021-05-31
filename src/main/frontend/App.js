@@ -10,9 +10,9 @@ const store = configureStore({
     middleware: [...getDefaultMiddleware()],
 });
 
-const App = ({ isLoggedIn, user }) => {
+const App = ({ id, user, isLoggedIn }) => {
 
-    store.dispatch(actionSetUser(isLoggedIn, user));
+    store.dispatch(actionSetUser(id, user, isLoggedIn));
 
     return (
         <Provider store={store}>
