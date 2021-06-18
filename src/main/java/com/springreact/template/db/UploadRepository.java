@@ -9,7 +9,7 @@ import java.util.Date;
 
 public interface UploadRepository extends PagingAndSortingRepository<Upload, Long> {
 
-    // query for checking if the task belongs to the user
+    // query for checking if the upload belongs to the user
     @RestResource(exported = false)
     @Query(value = "SELECT u.user.id FROM Upload u WHERE u.user = :user AND u.id = :id")
     Long getUploadByUserAndUploadId (

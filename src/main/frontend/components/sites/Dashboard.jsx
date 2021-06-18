@@ -105,11 +105,6 @@ const Dashboard = () => {
                     </div>
                 </form>
             }
-            {/* TESTING DELETE */}
-            <button onClick={async e => {
-                const req = await axios.delete(`/delete/1622406510335_ad_maurer_reviews-yugoslavia's-successor-states_Content File-PDF.pdf`);
-                console.log(req.status, req.data, req.statusText)
-            }}/>
         </>
     );
 };
