@@ -7,11 +7,9 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 import com.amazonaws.util.IOUtils;
-import com.springreact.template.controller.HomeController;
 import com.springreact.template.db.Upload;
 import com.springreact.template.db.UploadRepository;
 import com.springreact.template.db.User;
-import com.springreact.template.db.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +32,6 @@ public class StorageService {
 
     @Autowired
     private AmazonS3 s3Client;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private UploadRepository uploadRepository;

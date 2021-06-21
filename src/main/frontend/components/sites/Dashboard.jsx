@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Reaptcha from 'reaptcha';
-import {axios} from '../util/axiosConfig';
+import { axios } from '../util/axiosConfig';
 
 const Dashboard = () => {
-    const [recaptchaParams, setRecaptchaParams] = useState({});
     const [isSelected, setIsSelected] = useState(false);
+    const [isValidated, setIsValidated] = useState(false);
 
     const handleSubmission = async (e) => {
         e.preventDefault();
@@ -20,9 +20,11 @@ const Dashboard = () => {
                     'Content-Type': 'multipart/mixed',
                 },
                 onUploadProgress: (progressEvent) => {
-                    const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                    console.log(percentCompleted)
-                }
+                    const percentCompleted = Math.round(
+                        (progressEvent.loaded * 100) / progressEvent.total
+                    );
+                    console.log(percentCompleted);
+                },
             });
             console.log('Success:', result);
         } catch (e) {
@@ -30,81 +32,65 @@ const Dashboard = () => {
         }
     };
 
-    const handleCaptcha = async (e) => {
-
-        e.preventDefault();
-        e.stopPropagation();
-
+    const onVerify = async (recaptchaResponse) => {
         try {
-            const result = await axios.post('/captcha', "", {
-
+            const result = await axios.post('/captcha', '', {
                 params: {
-                    ...recaptchaParams
+                    'g-recaptcha-response': recaptchaResponse,
                 },
             });
+            setIsValidated(true);
             console.log(result);
         } catch (e) {
             console.log(e);
+            setIsValidated(false);
         }
-    }
-
-    const onVerify = (recaptchaResponse) => {
-        setRecaptchaParams({
-            'g-recaptcha-response': recaptchaResponse,
-        });
     };
 
     const onExpire = () => {
         console.log('Check expired, please validate again');
-        setRecaptchaParams({});
+    };
+
+    const onError = (e) => {
+        // TODO: Looks like a weird error... maybe try reloading the site and check your internet connection is stable
     };
 
     return (
         <>
-            <div>Validate Captcha</div>
-            <form onSubmit={handleCaptcha}>
-                <div
-                    className="g-recaptcha"
-                    data-sitekey="6Lce_ZsaAAAAAE9qyYGAWPQ1ZCpWrVSv3fFl-I7d"
-                >
-                    {}
-                </div>
+            <form onSubmit={handleSubmission}>
+                {!isValidated && (
+                    <Reaptcha
+                        sitekey={process.env.CAPTCHA_SITE_KEY}
+                        onVerify={onVerify}
+                        onExpire={onExpire}
+                        onError={onError}
+                    />
+                )}
 
-                <Reaptcha
-                    sitekey={process.env.CAPTCHA_SITE_KEY}
-                    onVerify={onVerify}
-                    onExpire={onExpire}
+                {!isSelected && (
+                    <p>
+                        <strong>
+                            <em>Please select a file</em>
+                        </strong>
+                    </p>
+                )}
+
+                <input
+                    type="file"
+                    name="file"
+                    onChange={(e) => setIsSelected(e.target.value.length > 0)}
                 />
 
                 <div>
-                    <input type="submit" value="Validate"/>
+                    <input
+                        disabled={!isSelected || !isValidated}
+                        type="submit"
+                        value="Submit"
+                    />
                 </div>
             </form>
 
-            <div>Upload File</div>
-            {
-                <form onSubmit={handleSubmission}>
-                    {!isSelected && (
-                        <p>
-                            <strong>
-                                <em>Please select a file</em>
-                            </strong>
-                        </p>
-                    )}
-
-                    <input
-                        type="file"
-                        name="file"
-                        onChange={(e) =>
-                            setIsSelected(e.target.value.length > 0)
-                        }
-                    />
-
-                    <div>
-                        <input disabled={!isSelected} type="submit" value="Submit"/>
-                    </div>
-                </form>
-            }
+            <a href={'/download/1624290214356____React.pdf'}>download</a>
         </>
     );
 };
