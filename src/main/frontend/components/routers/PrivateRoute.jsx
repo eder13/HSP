@@ -2,6 +2,7 @@ import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectLoggedIn } from '../../selectors/authSelector';
+import PropTypes from 'prop-types'
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
     const isLoggedIn = useSelector(selectLoggedIn);
@@ -15,5 +16,9 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         />
     );
 };
+
+PrivateRoute.propTypes = {
+    component: PropTypes.object
+}
 
 export default PrivateRoute;

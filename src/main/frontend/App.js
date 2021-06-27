@@ -4,6 +4,7 @@ import AppRouter from './components/routers/AppRouter';
 import userData from "./reducers/authReducer";
 import { actionSetUser } from './actions/authActions';
 import { Provider } from "react-redux";
+import PropTypes from 'prop-types';
 
 const store = configureStore({
     reducer: combineReducers({ user: userData }),
@@ -21,4 +22,8 @@ const App = ({ id, user, isLoggedIn }) => {
     );
 };
 
-export default App;
+App.propTypes = {
+    id: PropTypes.number,
+    user: PropTypes.string,
+    isLoggedIn: PropTypes.bool
+}

@@ -44,6 +44,8 @@
     "@babel/preset-react": "^7.13.13",
     "babel-loader": "^8.2.2",
     "css-loader": "^5.2.5",
+    "eslint": "^7.29.0",
+    "eslint-plugin-react": "^7.24.0",
     "file-loader": "^6.2.0",
     "react-hot-loader": "^4.13.0",
     "style-loader": "^2.0.0",

@@ -51,7 +51,7 @@ const Dashboard = () => {
         console.log('Check expired, please validate again');
     };
 
-    const onError = (e) => {
+    const onError = () => {
         // TODO: Looks like a weird error... maybe try reloading the site and check your internet connection is stable
     };
 
