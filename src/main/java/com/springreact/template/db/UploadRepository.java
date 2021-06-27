@@ -1,13 +1,41 @@
 package com.springreact.template.db;
 
+import com.querydsl.core.types.dsl.StringExpression;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
+import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import java.util.Date;
+import java.util.*;
 
-public interface UploadRepository extends PagingAndSortingRepository<Upload, Long> {
+public interface UploadRepository extends PagingAndSortingRepository<Upload, Long>,
+        QuerydslPredicateExecutor<Upload>,
+        QuerydslBinderCustomizer<QUpload> {
+
+    @Override
+    default void customize(QuerydslBindings bindings, QUpload upload) {
+
+        // ?name=value
+        bindings.bind(upload.name).first(StringExpression::containsIgnoreCase);
+
+        // ?createdOn=YYYY-MM-DD&createdOn=YYYY-MM-DD
+        bindings.bind(upload.createdOn).all((path, value) -> {
+
+            Iterator<? extends Date> it = value.iterator();
+            Date firstDate = it.next();
+            Date secondDate = it.next();
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(secondDate);
+            cal.add(Calendar.DATE, 1); // increment second value by 1
+            Date realSecondDate = cal.getTime();
+
+            return Optional.of(path.between(firstDate, realSecondDate));
+        });
+    }
 
     // query for checking if the upload belongs to the user
     @RestResource(exported = false)
@@ -26,7 +54,7 @@ public interface UploadRepository extends PagingAndSortingRepository<Upload, Lon
             @Param("createdOn") Date createdOn
     );
 
-    // query fro getting the Upload based on fileName
+    // query for getting the Upload based on fileName
     @RestResource(exported = false)
     @Query(value = "SELECT u FROM Upload u WHERE u.fileName = :fileName")
     Upload findUploadByFileName(

@@ -36,6 +36,9 @@ public class UploadValidator implements Validator {
             boolean denyAltering = foundId == null;
 
             if(denyAltering) {
+                System.out.println("########################### Alter Invalid Fields");
+                System.out.println("Not allowed to PATCH other fields");
+                System.out.println("###########################");
                 errors.reject("");
             }
         }
