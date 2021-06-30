@@ -27,3 +27,5 @@ App.propTypes = {
     user: PropTypes.string,
     isLoggedIn: PropTypes.bool
 }
+
+export default App;

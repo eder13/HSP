@@ -6,6 +6,10 @@ import { axios } from './components/util/axiosConfig';
 import 'normalize.css';
 
 (async () => {
+
+    console.log('%cWant to contribute? Feel free to submit your Pull Requests! 👨‍💻', 'background-color: #333; padding: 0.3rem 1.5rem; font-size: 1.2em; line-height: 1.4em; color: white;');
+    console.log('https://github.com/eder13/HSP')
+
     let isLoggedIn = false;
     let user = '';
     let id = -1;
