@@ -1,23 +1,74 @@
-.navbar {
-    width: 100vw;
-    height: 50px;
+
+* {
+    box-sizing: border-box;
+}
+
+/* Own Styling */
+.loginContainer {
+    border: none;
+    width: 184px;
+    height: 42px;
+    background-color: #4285f4;
+    border-radius: 2px;
+    box-shadow: 0 3px 4px 0 rgba(0,0,0,.25);
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    text-decoration: none;
+}
+
+.loginContainer:hover {
+    box-shadow: 0 0 6px #4285f4;
+}
+
+.loginContainer:active {
+    background: #1669F2;
+}
+
+.loginGoogleIconWrapper {
+    width: 52px;
+    height: 40px;
+    border-radius: 2px;
+    background-color: white;
+    margin-left: 1px;
+    margin-top: 1px;
+
+}
+
+.loginGoogleIcon {
+    margin-top: 11px;
+    margin-left: 11px;
+    width: 18px;
+    height: 18px;
+}
+
+.loginTextWrapper {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%; 
+    margin: 0; 
+
+}
+
+.loginText {
     color: white;
-    background-color: tomato;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    font-size: 0.9rem;
+    letter-spacing: 0.2px;
+    font-weight: 400;
+    margin-bottom: 0;
 }
 
-.navbarLeft {
-    padding-left: 2rem;
-}
-
-.navbarRight {
-    padding-right: 2rem;
-    display: flex;
-    align-items: center;
-}
-
-.navbarUser {
-    margin-right: 1rem;
+/* Bootstrap Overwrite */
+@media only screen and (max-width: 992px) {
+    .navLink { 
+        text-align: center;
+    }
+    .placeCenter {
+        justify-content: center;
+    }
 }

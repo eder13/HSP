@@ -201,4 +201,5 @@ dist
 .pnp.*
 
 # frontend builds
-src/resources/static/build/bundle.*
+src/main/resources/static/built/bundle.js
+src/main/resources/static/built/bundle.js.map

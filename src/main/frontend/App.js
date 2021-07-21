@@ -5,6 +5,9 @@ import userData from "./reducers/authReducer";
 import { actionSetUser } from './actions/authActions';
 import { Provider } from "react-redux";
 import PropTypes from 'prop-types';
+import 'bootswatch/dist/materia/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.min.js';
+import 'icono/dist/icono.min.css';
 
 const store = configureStore({
     reducer: combineReducers({ user: userData }),
