@@ -1,6 +1,8 @@
 package com.springreact.template.db;
 
 import com.querydsl.core.types.dsl.StringExpression;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
@@ -8,6 +10,7 @@ import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -36,6 +39,23 @@ public interface UploadRepository extends PagingAndSortingRepository<Upload, Lon
             return Optional.of(path.between(firstDate, realSecondDate));
         });
     }
+
+    // show paginated "My Uploads"
+    @RestResource(exported = true)
+    Page<Upload> findAllByUserId(Long id, Pageable pageable);
+
+    // search through "My Uploads" paginated
+    @RestResource(exported = true)
+    Page<Upload> findAllByUserIdAndNameContaining(Long id, String name, Pageable pageable);
+
+    /// TODO: Preauthorize if Param("id") isOwner!
+    // show paginated "My Downloads"
+    @RestResource(exported = true)
+    @Query(value = "select * from upload left join user_upload on user_upload.upload_id = upload.id WHERE user_upload.user_id=:id ORDER BY upload.name", nativeQuery = true)
+    Page<Upload> getDownloads(@Param("id") Long id, Pageable pageable);
+
+    // TODO: getDownloadsByName -> search (Like)
+    // search through "My Downloads" paginated
 
     // query for checking if the upload belongs to the user
     @RestResource(exported = false)

@@ -90,7 +90,7 @@ const Dashboard = () => {
                 </div>
             </form>
 
-            <a href={'/download/1624290214356____React.pdf'}>download</a>
+            <a href={'/download/1626904069169_cct_bestaetigung.pdf'}>download</a>
         </>
     );
 };

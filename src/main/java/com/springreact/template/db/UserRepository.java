@@ -11,6 +11,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
+import java.util.Collection;
+
 public interface UserRepository extends PagingAndSortingRepository<User, Long>,
         QuerydslPredicateExecutor<User>,
         QuerydslBinderCustomizer<QUser> {
@@ -34,8 +36,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long>,
     @Override
     @RestResource(exported = false)
     <S extends User> Iterable<S> saveAll(Iterable<S> var1);
-
-    //Optional<T> findById(ID var1); // GET /api/users/1
 
     @Override
     @RestResource(exported = false)
