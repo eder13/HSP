@@ -26,10 +26,10 @@ public class User {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date joined;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Upload> uploads;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "user_upload", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "upload_id", referencedColumnName = "id"))
     @RestResource(path = "downloads", rel = "downloads")

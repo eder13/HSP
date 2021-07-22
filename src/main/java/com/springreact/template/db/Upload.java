@@ -23,11 +23,11 @@ public class Upload {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date createdOn;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
-    @ManyToMany(mappedBy = "downloads", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "downloads", fetch = FetchType.LAZY)
     @RestResource(path = "downloads", rel = "downloads")
     private Set<User> users;
 

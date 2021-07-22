@@ -1,0 +1,16 @@
+.homeLandingImage {
+    margin-top: -35px;
+    margin-bottom: -35px;
+}
+
+@media only screen and (min-width: 800px) {
+    .homeLandingImageDesktop {
+        max-width: 800px !important;
+    }   
+}
+
+@media only screen and (min-width: 992px) {
+    .googleSignIn {
+        display: none;
+    }   
+}
