@@ -50,6 +50,7 @@
 }
 
 .loginText {
+    font-family: Roboto, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     color: white;
     font-size: 0.9rem;
     letter-spacing: 0.2px;

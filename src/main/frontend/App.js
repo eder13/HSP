@@ -1,15 +1,15 @@
-import { combineReducers, configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import React, { useEffect } from 'react';
-import AppRouter from './components/routers/AppRouter';
+import PropTypes from 'prop-types';
+import { combineReducers, configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { Provider } from "react-redux";
+import { actionSetUser } from './actions/authActions';
+import { actionSetBrowserWidth } from './actions/clientActions';
 import userData from './reducers/authReducer';
 import clientSystemInfo from './reducers/clientReducer';
-import { actionSetUser } from './actions/authActions';
-import { Provider } from "react-redux";
-import PropTypes from 'prop-types';
-import 'bootswatch/dist/materia/bootstrap.min.css';
+import AppRouter from './components/routers/AppRouter';
+import 'bootswatch/dist/zephyr/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import 'icono/dist/icono.min.css';
-import { actionSetBrowserWidth } from './actions/clientActions';
 import _ from 'lodash';
 
 const store = configureStore({
@@ -24,9 +24,10 @@ const captureBrowserWidth = () => {
 
 const App = ({ id, user, isLoggedIn }) => {
 
+    store.dispatch(actionSetUser(id, user, isLoggedIn));
+
     useEffect(() => {
         captureBrowserWidth();
-
         const debouncedCaptureBrowserWidth = _.debounce(captureBrowserWidth, 200);
 
         window.addEventListener("resize", debouncedCaptureBrowserWidth);
@@ -34,8 +35,6 @@ const App = ({ id, user, isLoggedIn }) => {
             window.removeEventListener('resize', debouncedCaptureBrowserWidth);
         }
     }, []);
-
-    store.dispatch(actionSetUser(id, user, isLoggedIn));
 
     return (
         <Provider store={store}>

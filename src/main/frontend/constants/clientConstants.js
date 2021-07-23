@@ -1,0 +1,5 @@
+const CLIENT_CONSTANTS = {
+    MOBILE_NAVBAR_BREAKPOINT: 992
+}
+
+export default CLIENT_CONSTANTS;
