@@ -1,15 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { selectLoggedIn, selectUser } from '../../selectors/authSelector';
+import { selectLoggedIn, selectUser, selectUserId } from '../../selectors/authSelector';
 import { selectIsMobileNavbar } from '../../selectors/clientInfoSelector';
 import ShowCase from '../ui/home-showcase/ShowCase';
 import ROUTES from '../routers/Routes';
+import { useGetUserByIdQuery } from '../../middleware/api';
 
 const Home = () => {
     const isLoggedIn = useSelector(selectLoggedIn);
     const username = useSelector(selectUser);
     const isMobileNavDisplayed = useSelector(selectIsMobileNavbar);
+
+    if(isLoggedIn) {
+        const userId = useSelector(selectUserId);
+        const { data, error, isLoading } = useGetUserByIdQuery(userId); 
+    
+        if(!isLoading) {
+            console.log(data);
+        }
+    }
 
     const renderDashboard = () => {
         return (

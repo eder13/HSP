@@ -12,7 +12,7 @@ import { BUTTON_VARIANT } from '../../../constants/buttonVariants';
 import ROUTES from '../../routers/Routes';
 import BUTTON_SIZE from '../../../constants/buttonSize';
 
-const getLiContent = (isLoggedIn, isMobileNavbarActive, onNewUploadClick) => {
+const getLiContent = (isLoggedIn, isMobileNavbarActive) => {
     
     const linkClasses = cssClassNamesHelper([
         'nav-link',
@@ -70,12 +70,12 @@ const Navbar = () => {
             <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
                 <div className="container-fluid">
                     <Link className="navbar-brand" to="/">LOGO</Link>
-                    {isLoggedIn && <Button onClick={onNewUploadClick} buttonSize={BUTTON_SIZE.SMALL} variant={BUTTON_VARIANT.BTN_DARK}><i style={iconoUpArrowStyle} className="icono-upArrow"></i>Neuer Upload</Button>}
+                    {isLoggedIn && <Button onClick={onNewUploadClick} buttonSize={BUTTON_SIZE.SMALL} variant={BUTTON_VARIANT.BTN_SECONDARY}><i style={iconoUpArrowStyle} className="icono-upArrow"></i>Neuer Upload</Button>}
                     <Button className="navbar-toggler" additionalProps={additionalNavTogglerProps}>
                         <span className="navbar-toggler-icon"></span>
                     </Button>
                     <div className="collapse navbar-collapse" id="navbarColor01">
-                        <List ulClassName="navbar-nav me-auto" listItemsContent={getLiContent(isLoggedIn, isMobileNavbarActive, onNewUploadClick)} liClassName="nav-item" />
+                        <List ulClassName="navbar-nav me-auto" listItemsContent={getLiContent(isLoggedIn, isMobileNavbarActive)} liClassName="nav-item" />
                         <LoginLogoutButton isLoggedIn={isLoggedIn} isMobileNavbarActive={isMobileNavbarActive} onLogout={onLogout} />
                     </div>
                 </div>

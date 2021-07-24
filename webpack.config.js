@@ -16,7 +16,7 @@ module.exports = {
             './src/main/frontend/index.js',
         ],
     },
-    devtool: 'sourcemaps',
+    devtool: 'source-map',
     cache: true,
     mode: 'development',
     output: {
