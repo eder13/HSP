@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectLoggedIn } from '../../../selectors/authSelector';
 import { Link, useHistory } from 'react-router-dom';
-import { axios } from '../../util/axiosConfig';
 import { selectIsMobileNavbar } from '../../../selectors/clientInfoSelector';
 import List from '../../atoms/List';
 import cssClassNamesHelper from '../../util/cssClassHelper';
@@ -11,6 +10,7 @@ import LoginLogoutButton from '../../molecules/login-logout-button/LoginLogoutBu
 import { BUTTON_VARIANT } from '../../../constants/buttonVariants';
 import ROUTES from '../../routers/Routes';
 import BUTTON_SIZE from '../../../constants/buttonSize';
+import Cookies from 'js-cookie';
 
 const getLiContent = (isLoggedIn, isMobileNavbarActive) => {
     
@@ -57,7 +57,8 @@ const Navbar = () => {
     }
 
     const onLogout = async () => {
-        await axios.post('/logout');
+        const req = await fetch('/logout', { method: 'post', headers: { 'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN')  } });
+        await req.ok;
         window.location.href = process.env.DOMAIN_URL;
     };
 

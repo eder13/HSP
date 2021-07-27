@@ -117,6 +117,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                             Map<String, Object> map = new HashMap<>();
                             map.put("name", oauth2user.getAttribute("name"));
                             map.put("email", oauth2user.getAttribute("email"));
+                            // TODO Picture of User: map.put("picture", oauth2user.getAttribute("picture")) 
 
                             // check if user logs in the first time -> true: save to database
                             if (userRepository.findUserByEmail(map.get("email").toString()) == null) {

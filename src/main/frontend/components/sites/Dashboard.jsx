@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Reaptcha from 'reaptcha';
-import { axios } from '../util/axiosConfig';
 
 const Dashboard = () => {
     const [isSelected, setIsSelected] = useState(false);
@@ -14,7 +13,7 @@ const Dashboard = () => {
         const formData = new FormData();
         formData.append('file', input.files[0]);
 
-        try {
+        /*try {
             const result = await axios.post('/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/mixed',
@@ -29,11 +28,11 @@ const Dashboard = () => {
             console.log('Success:', result);
         } catch (e) {
             console.log('Error:', e);
-        }
+        }*/
     };
 
     const onVerify = async (recaptchaResponse) => {
-        try {
+        /*try {
             const result = await axios.post('/captcha', '', {
                 params: {
                     'g-recaptcha-response': recaptchaResponse,
@@ -44,7 +43,7 @@ const Dashboard = () => {
         } catch (e) {
             console.log(e);
             setIsValidated(false);
-        }
+        }*/
     };
 
     const onExpire = () => {
