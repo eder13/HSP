@@ -1,3 +1,4 @@
 export const parseSQLDateToJavaScript = (sqlDate) => {
-    return new Date(Date.parse(sqlDate?.toString()));
+    const dateParsed = new Date(Date.parse(sqlDate?.toString()));
+    return `${dateParsed?.getDate()}.${dateParsed?.getMonth() + 1}.${dateParsed?.getUTCFullYear()}`
 }
