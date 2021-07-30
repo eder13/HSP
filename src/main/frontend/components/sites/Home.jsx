@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-key */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectLoggedIn, selectUser, selectUserId } from '../../selectors/authSelector';
 import { selectIsMobileNavbar } from '../../selectors/clientInfoSelector';
 import ShowCase from '../ui/home-showcase/ShowCase';
 import ROUTES from '../routers/Routes';
-import { useGetUserByIdQuery, useGetUserUploadsByIdQuery } from '../../middleware/api';
+import { useGetUserByIdQuery, useGetUserUploadsByIdQuery, useGetUserDownloadsByIdQuery } from '../../middleware/api';
 import { parseSQLDateToJavaScript } from '../util/dateParserUtil';
 import Table from '../atoms/Table';
 import Button from '../atoms/Button';
@@ -14,6 +14,7 @@ import { BUTTON_VARIANT } from '../../constants/buttonVariants';
 import BUTTON_SIZE from '../../constants/buttonSize';
 import styles from "./Home.module.css";
 import editIcon from "../../assets/edit_icon.png";
+import Image from '../atoms/Image';
 
 const Home = () => {
     const isLoggedIn = useSelector(selectLoggedIn);
@@ -21,7 +22,30 @@ const Home = () => {
     const isMobileNavDisplayed = useSelector(selectIsMobileNavbar);
     const userId = useSelector(selectUserId);
 
+    const [editMode, setEditMode] = useState(false);
+    const [actionButtons, setActionButtons] = useState({});
 
+    const actionButtonDefault = (<>
+        <Button onClick={() => setEditMode(editState => !editState)} variant={BUTTON_VARIANT.BTN_WARNING} additionalStyles={{ margin: '5px' }}>
+            <Image image={editIcon} width={20} height={18} additionalStyles={{ paddingBottom: '2px' }} alt="edit icon" />
+        </Button>
+        <Button variant={BUTTON_VARIANT.BTN_DANGER} additionalStyles={{ width: '54px', margin: '5px' }}>
+            <i style={{ margin: 0, marginTop: '5px', width: '12px', height: '12px' }} className={`icono-trash ${styles.iconoOverwrite}`} />
+        </Button>
+    </>);
+
+    const actionButtonEditActive = (<>
+        <Button variant={BUTTON_VARIANT.BTN_SUCCESS} additionalStyles={{ margin: '5px' }}>
+            <i style={{ width: '20px', height: '18px' }} className={`icono-check ${styles.iconoCheckOverwrite}`} />
+        </Button>
+        <Button onClick={() => setEditMode(false)} variant={BUTTON_VARIANT.BTN_DANGER} additionalStyles={{ margin: '5px' }}>
+            <i style={{ width: '20px', height: '18px' }} className="icono-cross" />
+        </Button>
+    </>);
+
+    useEffect(() => {
+        setActionButtons(editMode ? actionButtonEditActive : actionButtonDefault)
+    }, [editMode])
 
     const renderDashboard = () => {
 
@@ -30,19 +54,24 @@ const Home = () => {
 
         const { data: uploads, error: uploadsFetchError, isLoading: isUploadsLoading } = useGetUserUploadsByIdQuery(userId);
 
-        if (!isLoading && !error && !uploadsFetchError && !isUploadsLoading) {
+        const { data: downloads, error: downloadsFetchError, isLoading: isDownloadsLoading } = useGetUserDownloadsByIdQuery(userId);
+
+        if (!isLoading && !error && !uploadsFetchError && !isUploadsLoading && !downloadsFetchError && !isDownloadsLoading) {
             console.log(data);
             console.log(uploads);
+            console.log(downloads);
         }
+
+        console.log('##### editMode', editMode);
 
         // tableCellDataOfCorrespondingRowArray={[[uploads?._embedded?.uploads?.[0].name, uploadDate, <a href={`/download/${uploads?._embedded?.uploads?.[0].fileName}`}>download</a>, <><Button variant={BUTTON_VARIANT.BTN_WARNING}>Bearbeiten</Button> <Button variant={BUTTON_VARIANT.BTN_DANGER}>Löschen</Button></>], ["My Content"]]} />
         const getTableData = () => {
             return uploads?._embedded?.uploads.map((upload) =>
                 [
-                    upload?.name,
+                    editMode ? <input value={upload?.name} className="form-control form-control-sm" type="text" placeholder="Neuer Name" id="inputSmall" /> : upload?.name,
                     parseSQLDateToJavaScript(upload?.createdOn),
                     <a href={`/download/${upload?.fileName}`}>download</a>,
-                    <><Button variant={BUTTON_VARIANT.BTN_WARNING}><img width="34" src={editIcon} /></Button> <Button variant={BUTTON_VARIANT.BTN_DANGER}><i className="icono-trash"></i></Button></>
+                    actionButtons
                 ]
             );
         }
@@ -78,7 +107,7 @@ const Home = () => {
                         <div className="col-lg-8 order-lg-2">
                             <ul className="nav nav-tabs">
                                 <li className="nav-item">
-                                    <Link onClick={() => null} to="/" data-target="#profile" data-toggle="tab" className="nav-link active" style={{ cursor: 'default' }}>Profile</Link>
+                                    <Link onClick={() => null} to="/" className="nav-link active" style={{ cursor: 'default' }}>Profile</Link>
                                 </li>
                             </ul>
                             <div className="tab-content py-4">
@@ -102,11 +131,14 @@ const Home = () => {
                                         </div>
                                         <div className="col-md-12">
                                             <h5 className="mt-2 mb-4"><span className="fa fa-clock-o ion-clock float-right"></span>Meine Uploads</h5>
+                                            <div className="input-group mb-3">
+                                                <input type="text" className="form-control form-control-sm" placeholder="Durchsuche Uploads nach Namen ..." />
+                                                <Button buttonSize={BUTTON_SIZE.SMALL} variant={BUTTON_VARIANT.BTN_SECONDARY}><i className="icono-search" /></Button>
+                                            </div>
                                             {uploads && <Table tableHeaderData={<tr className="table-secondary"><td>Name</td><td>Upload Datum</td><td>{ }</td><td>Weitere Aktionen</td></tr>} tableRowsAmount={uploads?._embedded?.uploads?.length} tableCellsAmmount={4} tableCellDataOfCorrespondingRowArray={getTableData()} />}
                                         </div>
                                         <div className="col-md-12">
                                             <h5 className="mt-2 mb-4"><span className="fa fa-clock-o ion-clock float-right"></span>Meine Downloads</h5>
-
                                         </div>
                                     </div>
                                 </div>
@@ -117,8 +149,6 @@ const Home = () => {
             </main>
         );
     }
-
-
 
     const renderHomepage = () => {
         return (
