@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -112,7 +111,9 @@ const Home = () => {
                     upload?.name
                 ),
                 parseSQLDateToJavaScript(upload?.createdOn),
-                <a href={`/download/${upload?.fileName}`}>download</a>,
+                <a key={upload?.id} href={`/download/${upload?.fileName}`}>
+                    download
+                </a>,
                 actionButtons
             ]);
         };
@@ -192,8 +193,8 @@ const Home = () => {
                                         </div>
                                         <div className="col-md-12">
                                             <h5 className="mt-2 mb-4">
-                                                <span className="fa fa-clock-o ion-clock float-right"></span>Meine
-                                                Uploads
+                                                <span className="fa fa-clock-o ion-clock float-right"></span>
+                                                Meine Uploads
                                             </h5>
                                             <div className="input-group mb-3">
                                                 <input
@@ -226,8 +227,8 @@ const Home = () => {
                                         </div>
                                         <div className="col-md-12">
                                             <h5 className="mt-2 mb-4">
-                                                <span className="fa fa-clock-o ion-clock float-right"></span>Meine
-                                                Downloads
+                                                <span className="fa fa-clock-o ion-clock float-right"></span>
+                                                Meine Downloads
                                             </h5>
                                         </div>
                                     </div>
