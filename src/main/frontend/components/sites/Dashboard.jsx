@@ -74,18 +74,10 @@ const Dashboard = () => {
                     </p>
                 )}
 
-                <input
-                    type="file"
-                    name="file"
-                    onChange={(e) => setIsSelected(e.target.value.length > 0)}
-                />
+                <input type="file" name="file" onChange={(e) => setIsSelected(e.target.value.length > 0)} />
 
                 <div>
-                    <input
-                        disabled={!isSelected || !isValidated}
-                        type="submit"
-                        value="Submit"
-                    />
+                    <input disabled={!isSelected || !isValidated} type="submit" value="Submit" />
                 </div>
             </form>
 

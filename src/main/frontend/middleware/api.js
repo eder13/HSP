@@ -6,6 +6,7 @@ export const api = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.API_BASE,
+        // eslint-disable-next-line
         prepareHeaders: (headers, { getState }) => {
             headers.set('X-XSRF-TOKEN', Cookies.get('XSRF-TOKEN'));
             return headers;

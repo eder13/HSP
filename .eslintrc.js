@@ -1,27 +1,30 @@
 module.exports = {
-    "env": {
-        "browser": true,
-        "es2021": true
+    root: true,
+    env: {
+        browser: true,
+        es2021: true,
     },
-    "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended"
-    ],
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
+    settings: {
+        react: {
+            version: "17.0.1",
         },
-        "ecmaVersion": 12,
-        "sourceType": "module"
     },
-    "plugins": [
-        "react"
-    ],
-    "rules": {
+    extends: ["eslint:recommended", "plugin:react/recommended", "plugin:prettier/recommended"],
+    parserOptions: {
+        ecmaFeatures: {
+            jsx: true,
+        },
+        ecmaVersion: 12,
+        sourceType: "module",
     },
-    "globals": {
-        "module": "readonly",
-        "require": "readonly",
-        "process": "readonly"
-    }
+    plugins: ["react", "react-hooks", "prettier"],
+    rules: {
+        "prettier/prettier": "error",
+        quotes: ["off", "single"],
+    },
+    globals: {
+        module: "readonly",
+        require: "readonly",
+        process: "readonly",
+    },
 };
