@@ -7,6 +7,10 @@
     bottom: 10px !important;
 }
 
+.iconoUserOverwrite::before {
+    top: -15px !important;
+}
+
 .link {
   background-color: red ;
   position: relative;

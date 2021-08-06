@@ -9,7 +9,7 @@ import { actionSetBrowserWidth } from './actions/clientActions';
 import userData from './reducers/authReducer';
 import clientSystemInfo from './reducers/clientReducer';
 import AppRouter from './components/routers/AppRouter';
-import 'bootswatch/dist/zephyr/bootstrap.min.css';
+import 'bootswatch/dist/materia/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import 'icono/dist/icono.min.css';
 import _ from 'lodash';

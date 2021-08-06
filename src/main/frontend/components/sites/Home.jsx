@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectLoggedIn, selectUser, selectUserId } from '../../selectors/authSelector';
-import { selectIsMobileNavbar } from '../../selectors/clientInfoSelector';
+import { selectIsMobile, selectIsMobileNavbar } from '../../selectors/clientInfoSelector';
 import ShowCase from '../ui/home-showcase/ShowCase';
 import { useGetUserByIdQuery, useGetUserUploadsByIdQuery, useGetUserDownloadsByIdQuery } from '../../middleware/api';
 import { parseSQLDateToJavaScript } from '../util/dateParserUtil';
@@ -13,25 +13,37 @@ import BUTTON_SIZE from '../../constants/buttonSize';
 import styles from './Home.module.css';
 import editIcon from '../../assets/edit_icon.png';
 import Image from '../atoms/Image';
+import cssClassNamesHelper from '../util/cssClassHelper';
+import Pagination from '../atoms/Pagination';
 
 const Home = () => {
     const isLoggedIn = useSelector(selectLoggedIn);
     const username = useSelector(selectUser);
     const isMobileNavDisplayed = useSelector(selectIsMobileNavbar);
+    const isMobile = useSelector(selectIsMobile);
     const userId = useSelector(selectUserId);
     const $inputField = useRef();
+    const $myUploadsHeadingRef = useRef();
+
+    const uploadHeadingClasses = cssClassNamesHelper(['mt-2 mb-4', isMobile && 'mt-3']);
 
     const [editMode, setEditMode] = useState(false);
-    const [actionButtons, setActionButtons] = useState({});
+    const [actionButtons, setActionButtons] = useState(actionButtonDefault);
 
     const actionButtonDefault = (
         <>
             <Button
                 onClick={() => setEditMode((editState) => !editState)}
-                variant={BUTTON_VARIANT.BTN_LIGHT}
+                variant={BUTTON_VARIANT.BTN_PRIMARY}
                 additionalStyles={{ margin: '5px' }}
             >
-                <Image image={editIcon} width={24} height={24} alt="edit icon" />
+                <Image
+                    additionalStyles={{ filter: 'brightness(0) invert(1)' }}
+                    image={editIcon}
+                    width={22}
+                    height={21}
+                    alt="edit icon"
+                />
             </Button>
             <Button variant={BUTTON_VARIANT.BTN_DANGER} additionalStyles={{ width: '54px', margin: '5px' }}>
                 <i
@@ -65,15 +77,16 @@ const Home = () => {
     }, [editMode]);
 
     const renderDashboard = () => {
+        const [currentPage, setCurrentPage] = useState(0);
         const { data, error, isLoading } = useGetUserByIdQuery(userId);
         const joinedDate = parseSQLDateToJavaScript(data?.joined);
 
+        // console.log(data.id, data.sortBy, data.sortDirection, data.page);
         const {
             data: uploads,
             error: uploadsFetchError,
             isLoading: isUploadsLoading
-        } = useGetUserUploadsByIdQuery(userId);
-
+        } = useGetUserUploadsByIdQuery({ id: userId, page: currentPage });
         const {
             data: downloads,
             error: downloadsFetchError,
@@ -88,14 +101,11 @@ const Home = () => {
             !downloadsFetchError &&
             !isDownloadsLoading
         ) {
-            console.log(data);
+            //console.log(data);
             console.log(uploads);
             console.log(downloads);
         }
 
-        console.log('##### editMode', editMode);
-
-        // tableCellDataOfCorrespondingRowArray={[[uploads?._embedded?.uploads?.[0].name, uploadDate, <a href={`/download/${uploads?._embedded?.uploads?.[0].fileName}`}>download</a>, <><Button variant={BUTTON_VARIANT.BTN_WARNING}>Bearbeiten</Button> <Button variant={BUTTON_VARIANT.BTN_DANGER}>Löschen</Button></>], ["My Content"]]} />
         const getTableData = () => {
             return uploads?._embedded?.uploads.map((upload) => [
                 editMode ? (
@@ -111,10 +121,21 @@ const Home = () => {
                     upload?.name
                 ),
                 parseSQLDateToJavaScript(upload?.createdOn),
+                actionButtons,
                 <a key={upload?.id} href={`/download/${upload?.fileName}`}>
                     download
-                </a>,
-                actionButtons
+                </a>
+            ]);
+        };
+
+        const getDownloadsTableData = () => {
+            return downloads?._embedded?.uploads.map((download) => [
+                download?.name,
+                parseSQLDateToJavaScript(download?.createdOn),
+                'Autor',
+                <a key={download?.id} href={`/download/${download?.fileName}`}>
+                    download
+                </a>
             ]);
         };
 
@@ -154,13 +175,19 @@ const Home = () => {
                 <div className="container mt-5">
                     <div className="row my-2">
                         <div className="col-lg-4 order-lg-1 text-center">
-                            <img
-                                src="//placehold.it/150"
+                            <Image
                                 className="mx-auto img-fluid img-circle d-block mb-3"
-                                alt="avatar"
+                                image={'//placehold.it/150'}
+                                alt="profile picture"
                             />
                             <span>
-                                <i style={{ width: '24px' }} className="icono-mail" /> {username}
+                                <i
+                                    style={{ width: '24px', margin: '12px 1px 5px' }}
+                                    className={`icono-user ${styles.iconoUserOverwrite}`}
+                                />{' '}
+                                {'TODO: My Full Name'} <br />
+                                <i style={{ width: '24px' }} className="icono-mail" />
+                                {' ' + username}
                             </span>
                         </div>
                         <div className="col-lg-8 order-lg-2">
@@ -172,13 +199,13 @@ const Home = () => {
                                         className="nav-link active"
                                         style={{ cursor: 'default' }}
                                     >
-                                        Profile
+                                        Profil
                                     </Link>
                                 </li>
                             </ul>
                             <div className="tab-content py-4">
                                 <div className="tab-pane active" id="profile">
-                                    <h5 className="mb-3">Statistik</h5>
+                                    <h3 className="mb-3">Statistik</h3>
                                     <div className="row">
                                         <div className="col-md-6">
                                             <h6>Mitglied seit</h6>
@@ -191,16 +218,19 @@ const Home = () => {
                                             <h6>Auszeichnungen</h6>
                                             <span className="badge bg-dark">Junior</span>
                                         </div>
+                                        {isMobile && (
+                                            <hr style={{ maxWidth: '90vw', marginLeft: '8px' }} className="mt-4" />
+                                        )}
                                         <div className="col-md-12">
-                                            <h5 className="mt-2 mb-4">
+                                            <h5 ref={$myUploadsHeadingRef} className={uploadHeadingClasses}>
                                                 <span className="fa fa-clock-o ion-clock float-right"></span>
-                                                Meine Uploads
+                                                Meine Uploads {'⬆️'}
                                             </h5>
                                             <div className="input-group mb-3">
                                                 <input
                                                     type="text"
                                                     className="form-control form-control-sm"
-                                                    placeholder="Durchsuche Uploads nach Namen ..."
+                                                    placeholder="Durchsuche Uploads ..."
                                                 />
                                                 <Button
                                                     buttonSize={BUTTON_SIZE.SMALL}
@@ -210,26 +240,80 @@ const Home = () => {
                                                 </Button>
                                             </div>
                                             {uploads && (
-                                                <Table
-                                                    tableHeaderData={
-                                                        <tr className="table-secondary">
-                                                            <td>Name</td>
-                                                            <td>Upload Datum</td>
-                                                            <td>{}</td>
-                                                            <td>Weitere Aktionen</td>
-                                                        </tr>
-                                                    }
-                                                    tableRowsAmount={uploads?._embedded?.uploads?.length}
-                                                    tableCellsAmmount={4}
-                                                    tableCellDataOfCorrespondingRowArray={getTableData()}
-                                                />
+                                                <>
+                                                    <Table
+                                                        tableHeaderData={
+                                                            <tr className="table-dark">
+                                                                <td style={{ verticalAlign: 'middle' }}>
+                                                                    <strong>Name</strong>
+                                                                </td>
+                                                                <td style={{ verticalAlign: 'middle' }}>
+                                                                    <strong>Upload Datum</strong>
+                                                                </td>
+                                                                <td style={{ verticalAlign: 'middle' }}>
+                                                                    <strong>Aktionen</strong>
+                                                                </td>
+                                                                <td>{}</td>
+                                                            </tr>
+                                                        }
+                                                        tableRowsAmount={uploads?._embedded?.uploads?.length}
+                                                        tableCellsAmmount={4}
+                                                        tableCellDataOfCorrespondingRowArray={getTableData()}
+                                                    />
+                                                    {/* 0 = 1 etc. --> Array Counting */}
+                                                    <Pagination
+                                                        gettingDataCallbackArray={[
+                                                            ...new Array(uploads?.page?.totalPages)
+                                                        ].map((_, index) => () => setCurrentPage(index))}
+                                                        currentSelection={uploads?.page?.number}
+                                                        ref={$myUploadsHeadingRef}
+                                                        prev={uploads?._links?.prev?.href}
+                                                        next={uploads?._links?.next?.href}
+                                                        first={uploads?._links?.first?.href}
+                                                        last={uploads?._links?.last?.href}
+                                                        setPage={setCurrentPage}
+                                                    />
+                                                </>
                                             )}
                                         </div>
                                         <div className="col-md-12">
-                                            <h5 className="mt-2 mb-4">
-                                                <span className="fa fa-clock-o ion-clock float-right"></span>
-                                                Meine Downloads
-                                            </h5>
+                                            <h5 className="mt-2 mb-4 text-dark">Meine Downloads {'⬇️'}</h5>
+                                            <div className="input-group mb-3">
+                                                <input
+                                                    type="text"
+                                                    className="form-control form-control-sm"
+                                                    placeholder="Durchsuche Downloads ..."
+                                                />
+                                                <Button
+                                                    buttonSize={BUTTON_SIZE.SMALL}
+                                                    variant={BUTTON_VARIANT.BTN_SECONDARY}
+                                                >
+                                                    <i className="icono-search" />
+                                                </Button>
+                                            </div>
+                                            {downloads && (
+                                                <>
+                                                    <Table
+                                                        tableHeaderData={
+                                                            <tr className="table-dark">
+                                                                <td style={{ verticalAlign: 'middle' }}>
+                                                                    <strong>Name</strong>
+                                                                </td>
+                                                                <td style={{ verticalAlign: 'middle' }}>
+                                                                    <strong>Upload Datum</strong>
+                                                                </td>
+                                                                <td style={{ verticalAlign: 'middle' }}>
+                                                                    <strong>AutorIn</strong>
+                                                                </td>
+                                                                <td>{}</td>
+                                                            </tr>
+                                                        }
+                                                        tableRowsAmount={downloads?._embedded?.uploads?.length}
+                                                        tableCellsAmmount={4}
+                                                        tableCellDataOfCorrespondingRowArray={getDownloadsTableData()}
+                                                    />
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

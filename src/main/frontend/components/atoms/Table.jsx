@@ -31,8 +31,6 @@ const Table = (props) => {
             tableBodyData.push(<tr key={rows}>{td.map((jsx) => jsx)}</tr>);
             td = [];
         }
-
-        // TODO try with <Fragment> as key
         return tableBodyData.map((jsx) => jsx);
     };
 

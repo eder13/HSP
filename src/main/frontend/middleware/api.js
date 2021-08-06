@@ -17,7 +17,7 @@ export const api = createApi({
             query: (id) => API_ENDPOINTS.USER_INFO(id)
         }),
         getUserUploadsById: builder.query({
-            query: (id, sortBy, sortDirection, page) => API_ENDPOINTS.USER_UPLOAD_INFO(id, sortBy, sortDirection, page)
+            query: ({ id, sortBy, sortDirection, page }) => API_ENDPOINTS.USER_UPLOAD_INFO(id, sortBy, sortDirection, page)
         }),
         getUserDownloadsById: builder.query({
             query: (id, sortBy, sortDirection, page) => API_ENDPOINTS.USER_DOWNLOAD_INFO(id, sortBy, sortDirection, page)
