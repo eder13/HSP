@@ -20,7 +20,7 @@ const store = configureStore({
         user: userData,
         clientSystemInfo
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware)
+    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(api.middleware)
 });
 
 setupListeners(store.dispatch);

@@ -2,6 +2,8 @@ var path = require('path');
 var { DefinePlugin } = require('webpack');
 var dotenv = require('dotenv').config({ path: __dirname + '/.env' });
 
+// TODO: Check if CSS Vendor Prefixes are set
+
 module.exports = {
     node: {
         fs: 'empty',

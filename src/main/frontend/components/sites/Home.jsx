@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { selectLoggedIn, selectUser, selectUserId } from '../../selectors/authSelector';
 import { selectIsMobile, selectIsMobileNavbar } from '../../selectors/clientInfoSelector';
 import ShowCase from '../ui/home-showcase/ShowCase';
-import { useGetUserByIdQuery, useGetUserUploadsByIdQuery, useGetUserDownloadsByIdQuery } from '../../middleware/api';
 import { parseSQLDateToJavaScript } from '../util/dateParserUtil';
 import Table from '../atoms/Table';
 import Button from '../atoms/Button';
@@ -15,6 +14,7 @@ import editIcon from '../../assets/edit_icon.png';
 import Image from '../atoms/Image';
 import cssClassNamesHelper from '../util/cssClassHelper';
 import Pagination from '../atoms/Pagination';
+import useInitialDashboardData from '../../hooks/useInitialDashboarData';
 
 const Home = () => {
     const isLoggedIn = useSelector(selectLoggedIn);
@@ -33,7 +33,7 @@ const Home = () => {
     const actionButtonDefault = (
         <>
             <Button
-                onClick={() => setEditMode((editState) => !editState)}
+                onClick={() => setEditMode(editState => !editState)}
                 variant={BUTTON_VARIANT.BTN_PRIMARY}
                 additionalStyles={{ margin: '5px' }}
             >
@@ -47,7 +47,12 @@ const Home = () => {
             </Button>
             <Button variant={BUTTON_VARIANT.BTN_DANGER} additionalStyles={{ width: '54px', margin: '5px' }}>
                 <i
-                    style={{ margin: 0, marginTop: '5px', width: '12px', height: '12px' }}
+                    style={{
+                        margin: 0,
+                        marginTop: '5px',
+                        width: '12px',
+                        height: '12px'
+                    }}
                     className={`icono-trash ${styles.iconoOverwrite}`}
                 />
             </Button>
@@ -78,36 +83,21 @@ const Home = () => {
 
     const renderDashboard = () => {
         const [currentPage, setCurrentPage] = useState(0);
-        const { data, error, isLoading } = useGetUserByIdQuery(userId);
-        const joinedDate = parseSQLDateToJavaScript(data?.joined);
 
-        // console.log(data.id, data.sortBy, data.sortDirection, data.page);
-        const {
-            data: uploads,
-            error: uploadsFetchError,
-            isLoading: isUploadsLoading
-        } = useGetUserUploadsByIdQuery({ id: userId, page: currentPage });
-        const {
-            data: downloads,
-            error: downloadsFetchError,
-            isLoading: isDownloadsLoading
-        } = useGetUserDownloadsByIdQuery(userId);
+        /// TODO: isNextPaginationLoading
+        const { loading, error, data } = useInitialDashboardData(userId, currentPage, undefined);
 
-        if (
-            !isLoading &&
-            !error &&
-            !uploadsFetchError &&
-            !isUploadsLoading &&
-            !downloadsFetchError &&
-            !isDownloadsLoading
-        ) {
-            //console.log(data);
-            console.log(uploads);
-            console.log(downloads);
+        if (loading) {
+            return <div>Loading...</div>;
         }
 
+        /**
+         * Selectors
+         * */
+        const joinedDate = parseSQLDateToJavaScript(data?.userData?.joined);
+
         const getTableData = () => {
-            return uploads?._embedded?.uploads.map((upload) => [
+            return data?.uploadData?._embedded?.uploads.map(upload => [
                 editMode ? (
                     <input
                         ref={$inputField}
@@ -129,7 +119,7 @@ const Home = () => {
         };
 
         const getDownloadsTableData = () => {
-            return downloads?._embedded?.uploads.map((download) => [
+            return data?.downloadData?._embedded?.uploads.map(download => [
                 download?.name,
                 parseSQLDateToJavaScript(download?.createdOn),
                 'Autor',
@@ -159,7 +149,7 @@ const Home = () => {
                                 </span>
                                 <p>
                                     <strong>Uploads: </strong>
-                                    {data?.uploadCount}
+                                    {data?.userData?.uploadCount}
                                 </p>
                                 <a href="#">Alle Unterrichtsmaterialien</a>
                             </div>
@@ -182,7 +172,10 @@ const Home = () => {
                             />
                             <span>
                                 <i
-                                    style={{ width: '24px', margin: '12px 1px 5px' }}
+                                    style={{
+                                        width: '24px',
+                                        margin: '12px 1px 5px'
+                                    }}
                                     className={`icono-user ${styles.iconoUserOverwrite}`}
                                 />{' '}
                                 {'TODO: My Full Name'} <br />
@@ -211,7 +204,7 @@ const Home = () => {
                                             <h6>Mitglied seit</h6>
                                             <p>{joinedDate}</p>
                                             <h6>Uploads</h6>
-                                            <p>{data?.uploadCount}</p>
+                                            <p>{data?.userData?.uploadCount}</p>
                                         </div>
                                         <div className="col-md-6">
                                             {/* TODO: Badges Achievement */}
@@ -219,7 +212,13 @@ const Home = () => {
                                             <span className="badge bg-dark">Junior</span>
                                         </div>
                                         {isMobile && (
-                                            <hr style={{ maxWidth: '90vw', marginLeft: '8px' }} className="mt-4" />
+                                            <hr
+                                                style={{
+                                                    maxWidth: '90vw',
+                                                    marginLeft: '8px'
+                                                }}
+                                                className="mt-4"
+                                            />
                                         )}
                                         <div className="col-md-12">
                                             <h5 ref={$myUploadsHeadingRef} className={uploadHeadingClasses}>
@@ -239,38 +238,50 @@ const Home = () => {
                                                     <i className="icono-search" />
                                                 </Button>
                                             </div>
-                                            {uploads && (
+                                            {data?.uploadData && (
                                                 <>
                                                     <Table
                                                         tableHeaderData={
                                                             <tr className="table-dark">
-                                                                <td style={{ verticalAlign: 'middle' }}>
+                                                                <td
+                                                                    style={{
+                                                                        verticalAlign: 'middle'
+                                                                    }}
+                                                                >
                                                                     <strong>Name</strong>
                                                                 </td>
-                                                                <td style={{ verticalAlign: 'middle' }}>
+                                                                <td
+                                                                    style={{
+                                                                        verticalAlign: 'middle'
+                                                                    }}
+                                                                >
                                                                     <strong>Upload Datum</strong>
                                                                 </td>
-                                                                <td style={{ verticalAlign: 'middle' }}>
+                                                                <td
+                                                                    style={{
+                                                                        verticalAlign: 'middle'
+                                                                    }}
+                                                                >
                                                                     <strong>Aktionen</strong>
                                                                 </td>
                                                                 <td>{}</td>
                                                             </tr>
                                                         }
-                                                        tableRowsAmount={uploads?._embedded?.uploads?.length}
+                                                        tableRowsAmount={data?.uploadData?._embedded?.uploads?.length}
                                                         tableCellsAmmount={4}
                                                         tableCellDataOfCorrespondingRowArray={getTableData()}
                                                     />
                                                     {/* 0 = 1 etc. --> Array Counting */}
                                                     <Pagination
                                                         gettingDataCallbackArray={[
-                                                            ...new Array(uploads?.page?.totalPages)
+                                                            ...new Array(data?.uploadData?.page?.totalPages)
                                                         ].map((_, index) => () => setCurrentPage(index))}
-                                                        currentSelection={uploads?.page?.number}
+                                                        currentSelection={data?.uploadData?.page?.number}
                                                         ref={$myUploadsHeadingRef}
-                                                        prev={uploads?._links?.prev?.href}
-                                                        next={uploads?._links?.next?.href}
-                                                        first={uploads?._links?.first?.href}
-                                                        last={uploads?._links?.last?.href}
+                                                        prev={data?.uploadData?._links?.prev?.href}
+                                                        next={data?.uploadData?._links?.next?.href}
+                                                        first={data?.uploadData?._links?.first?.href}
+                                                        last={data?.uploadData?._links?.last?.href}
                                                         setPage={setCurrentPage}
                                                     />
                                                 </>
@@ -291,24 +302,36 @@ const Home = () => {
                                                     <i className="icono-search" />
                                                 </Button>
                                             </div>
-                                            {downloads && (
+                                            {data?.downloadData && (
                                                 <>
                                                     <Table
                                                         tableHeaderData={
                                                             <tr className="table-dark">
-                                                                <td style={{ verticalAlign: 'middle' }}>
+                                                                <td
+                                                                    style={{
+                                                                        verticalAlign: 'middle'
+                                                                    }}
+                                                                >
                                                                     <strong>Name</strong>
                                                                 </td>
-                                                                <td style={{ verticalAlign: 'middle' }}>
+                                                                <td
+                                                                    style={{
+                                                                        verticalAlign: 'middle'
+                                                                    }}
+                                                                >
                                                                     <strong>Upload Datum</strong>
                                                                 </td>
-                                                                <td style={{ verticalAlign: 'middle' }}>
+                                                                <td
+                                                                    style={{
+                                                                        verticalAlign: 'middle'
+                                                                    }}
+                                                                >
                                                                     <strong>AutorIn</strong>
                                                                 </td>
                                                                 <td>{}</td>
                                                             </tr>
                                                         }
-                                                        tableRowsAmount={downloads?._embedded?.uploads?.length}
+                                                        tableRowsAmount={data?.downloadData?._embedded?.uploads?.length}
                                                         tableCellsAmmount={4}
                                                         tableCellDataOfCorrespondingRowArray={getDownloadsTableData()}
                                                     />

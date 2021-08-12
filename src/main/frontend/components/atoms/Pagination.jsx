@@ -16,23 +16,20 @@ const Pagination = forwardRef((props, ref) => {
         <div style={{ margin: '0 auto' }}>
             <ul className="pagination">
                 {gettingDataCallbackArray.length > CLIENT_CONSTANTS.PAGINATION_LIMIT ? (
+                    // TODO: IMPLEMENT like so https://cdn.dribbble.com/users/1231641/screenshots/8873527/085.png?compress=1&resize=400x300
                     <></>
                 ) : (
                     <>
                         <li className={cns(['page-item', !prev && 'disabled'])}>
                             <a
-                                onClick={(e) => {
+                                onClick={e => {
                                     if (!prev) {
                                         return;
                                     }
-
                                     e.preventDefault();
                                     setPage(prevPageNumber);
-
                                     scrollToElement(ref.current);
-
-                                    // TODO: If when clicked the prev is not clickable -> blur
-                                    //e.target.blur();
+                                    e.target.blur();
                                 }}
                                 className="page-link"
                                 href="#"
@@ -43,10 +40,11 @@ const Pagination = forwardRef((props, ref) => {
                         {gettingDataCallbackArray.map((callback, index) => (
                             <li key={index} className={cns(['page-item', index === currentSelection && 'active'])}>
                                 <a
-                                    onClick={(e) => {
+                                    onClick={e => {
                                         e.preventDefault();
                                         callback();
                                         scrollToElement(ref.current);
+                                        e.target.blur();
                                     }}
                                     className="page-link"
                                     href="#"
@@ -57,18 +55,14 @@ const Pagination = forwardRef((props, ref) => {
                         ))}
                         <li className={cns(['page-item', !next && 'disabled'])}>
                             <a
-                                onClick={(e) => {
+                                onClick={e => {
                                     if (!next) {
                                         return;
                                     }
-
                                     e.preventDefault();
                                     setPage(nextPageNumber);
-
                                     scrollToElement(ref.current);
-
-                                    // TODO: If when clicked the next is not clickable -> blur
-                                    //e.target.blur();
+                                    e.target.blur();
                                 }}
                                 className="page-link"
                                 href="#"

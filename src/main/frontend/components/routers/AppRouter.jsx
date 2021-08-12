@@ -10,6 +10,7 @@ const AppRouter = () => (
     <BrowserRouter>
         <Navbar />
         <Switch>
+            {/* TODO -- HOME_DASHBOARD -- if logged in HOME else DASHBOARD */}
             <Route exact path={ROUTES.HOME_DASHBOARD} component={Home} />
             <PrivateRoute exact path={ROUTES.UPLOAD_FILE} component={Dashboard} />
         </Switch>
