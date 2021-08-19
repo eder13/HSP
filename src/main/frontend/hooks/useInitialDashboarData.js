@@ -6,19 +6,23 @@ const useInitialDashboardData = (userId, currentUploadsPage, currentDownloadsPag
     const {
         data: uploadData,
         error: uploadDataError,
-        isLoading: isUploadDataLoading
+        isFetching: isUploadDataLoading
     } = useGetUserUploadsByIdQuery({ id: userId, page: currentUploadsPage });
+
+    console.log('##### isUploadDataLoadingHook', isUploadDataLoading);
 
     const {
         data: downloadData,
         error: downloadDataError,
-        isLoading: isDownloadDataLoading
+        isFetching: isDownloadDataLoading
     } = useGetUserDownloadsByIdQuery(userId); // TODO: currentDownloadsPage
 
     // TODO: check if any error occured --> return first error if so
 
     return {
-        loading: isUserDataLoading || isUploadDataLoading || isDownloadDataLoading,
+        isUserDataLoading,
+        isUploadDataLoading,
+        isDownloadDataLoading,
         error: {
             userDataError,
             uploadDataError,

@@ -3,12 +3,13 @@ import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import App from './App';
 import axios from 'axios';
-import 'normalize.css';
 
 (async () => {
-
-    console.log('%cWant to contribute? Feel free to submit your Pull Requests! 👨‍💻', 'background-color: #333; padding: 0.3rem 1.5rem; font-size: 1.2em; line-height: 1.4em; color: white;');
-    console.log('https://github.com/eder13/HSP')
+    console.log(
+        '%cWant to contribute? Feel free to submit your Pull Requests! 👨‍💻',
+        'background-color: #333; padding: 0.3rem 1.5rem; font-size: 1.2em; line-height: 1.4em; color: white;'
+    );
+    console.log('https://github.com/eder13/HSP');
 
     let isLoggedIn = false;
     let user = '';
@@ -32,7 +33,7 @@ import 'normalize.css';
         }
         console.error('[auth]: user is not authenticated');
     } finally {
-        const render = (App) => {
+        const render = App => {
             ReactDOM.render(
                 <AppContainer>
                     <App id={id} user={user} isLoggedIn={isLoggedIn} />

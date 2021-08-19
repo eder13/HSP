@@ -48,6 +48,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests(a -> a
+                        /// FIXME: Favicon always generates 404 Message
                         .antMatchers("/", "/error", "/built/**", "/images/**").permitAll()
 
                         /**

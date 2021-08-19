@@ -1,35 +1,41 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { BUTTON_VARIANT } from '../../constants/buttonVariants'
-import cssClassNamesHelper from '../util/cssClassHelper'
-import BUTTON_SIZE from '../../constants/buttonSize'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { BUTTON_VARIANT } from '../../constants/buttonVariants';
+import cssClassNamesHelper from '../util/cssClassHelper';
+import BUTTON_SIZE from '../../constants/buttonSize';
 
-const Button = (props) => {
-    
-    const { 
-        id = '', 
-        className = '', 
-        variant = BUTTON_VARIANT.BTN_NONE, 
-        buttonSize = BUTTON_SIZE.NORMAL, 
-        type = 'button', 
-        children = 'My Button Text', 
-        additionalStyles, 
+const Button = props => {
+    const {
+        id = '',
+        className = '',
+        variant = BUTTON_VARIANT.BTN_NONE,
+        buttonSize = BUTTON_SIZE.NORMAL,
+        type = 'button',
+        children = 'My Button Text',
+        additionalStyles,
         additionalProps,
-        onClick = () => {}
+        onClick = () => {},
+        onMouseOver = () => {},
+        onMouseOut = () => {}
     } = props;
 
-    const buttonClasses = cssClassNamesHelper([
-        variant, 
-        buttonSize,
-        className
-    ]);
-    
+    const buttonClasses = cssClassNamesHelper([variant, buttonSize, className]);
+
     return (
-        <button onClick={onClick} id={id} className={buttonClasses} type={type} style={additionalStyles} {...additionalProps}>
+        <button
+            onClick={onClick}
+            onMouseOver={onMouseOver}
+            onMouseOut={onMouseOut}
+            id={id}
+            className={buttonClasses}
+            type={type}
+            style={additionalStyles}
+            {...additionalProps}
+        >
             {children}
         </button>
-    )
-}
+    );
+};
 
 Button.propTypes = {
     id: PropTypes.string,
@@ -40,7 +46,9 @@ Button.propTypes = {
     children: PropTypes.any,
     additionalStyles: PropTypes.object,
     additionalProps: PropTypes.object,
-    onClick: PropTypes.func
-}
+    onClick: PropTypes.func,
+    onMouseOver: PropTypes.func,
+    onMouseOut: PropTypes.func
+};
 
-export default Button
+export default Button;

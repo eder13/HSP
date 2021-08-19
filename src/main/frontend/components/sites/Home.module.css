@@ -1,20 +1,7 @@
-.iconoOverwrite::before {
-    box-shadow: inset 0 0 0 32px,-6px 2px 0 0,-6px 2px 0 0,0 2px 0 0,6px 2px 0 0,6px 2px 0 0 !important;
-}
-
-.iconoCheckOverwrite::after {
-    left: 0px !important;
-    bottom: 10px !important;
-}
-
-.iconoUserOverwrite::before {
-    top: -15px !important;
-}
-
 .link {
-  background-color: red ;
-  position: relative;
-  left: -20px;
-  top: -10px;
-  color:  red;
+    background-color: red;
+    position: relative;
+    left: -20px;
+    top: -10px;
+    color: red;
 }

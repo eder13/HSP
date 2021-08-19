@@ -2,11 +2,9 @@ var path = require('path');
 var { DefinePlugin } = require('webpack');
 var dotenv = require('dotenv').config({ path: __dirname + '/.env' });
 
-// TODO: Check if CSS Vendor Prefixes are set
-
 module.exports = {
     node: {
-        fs: 'empty',
+        fs: 'empty'
     },
 
     entry: {
@@ -15,8 +13,8 @@ module.exports = {
             'react-hot-loader/webpack',
             'webpack-dev-server/client?http://localhost:8080',
             'webpack/hot/only-dev-server',
-            './src/main/frontend/index.js',
-        ],
+            './src/main/frontend/index.js'
+        ]
     },
     devtool: 'source-map',
     cache: true,
@@ -24,29 +22,26 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, './src/main/resources/static/built/'),
         filename: 'bundle.js',
-        publicPath: '/built/',
+        publicPath: '/built/'
     },
     devServer: {
         hot: true,
-        contentBase: [
-            path.resolve(__dirname, '.'),
-            path.resolve(__dirname, './src/main/resources/static/built'),
-        ],
+        contentBase: [path.resolve(__dirname, '.'), path.resolve(__dirname, './src/main/resources/static/built')],
         proxy: {
             '/': {
                 target: {
                     host: 'localhost',
                     protocol: 'http:',
-                    port: 8081,
-                },
+                    port: 8081
+                }
             },
             ignorePath: true,
             changeOrigin: true,
-            secure: false,
+            secure: false
         },
         publicPath: '/built/',
         port: 8080,
-        host: 'localhost',
+        host: 'localhost'
     },
     module: {
         rules: [
@@ -57,17 +52,19 @@ module.exports = {
                     {
                         loader: 'babel-loader',
                         options: {
-                            presets: [
-                                '@babel/preset-env',
-                                '@babel/preset-react',
-                            ],
-                        },
-                    },
-                ],
+                            presets: ['@babel/preset-env', '@babel/preset-react']
+                        }
+                    }
+                ]
             },
             {
                 test: /\.css$/,
-                use: ['style-loader', 'css-loader'],
+                use: ['style-loader', 'css-loader', 'postcss-loader']
+            },
+            {
+                exclude: /(node_modules)/,
+                test: /\.css$/,
+                use: ['postcss-loader']
             },
             {
                 test: /\.(png|jpg|jpeg|gif)$/,
@@ -75,20 +72,20 @@ module.exports = {
                 options: {
                     publicPath: 'built/images/',
                     outputPath: 'images',
-                    useRelativePath: false,
-                },
+                    useRelativePath: false
+                }
             },
-            { 
-                test: /\.jsx?$/, 
-                resolve: { 
-                    extensions: ['.js', '.jsx'] 
-                } 
-            },
-        ],
+            {
+                test: /\.jsx?$/,
+                resolve: {
+                    extensions: ['.js', '.jsx']
+                }
+            }
+        ]
     },
     plugins: [
         new DefinePlugin({
-            'process.env': JSON.stringify(dotenv.parsed),
-        }),
-    ],
+            'process.env': JSON.stringify(dotenv.parsed)
+        })
+    ]
 };

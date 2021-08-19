@@ -5,7 +5,7 @@ const Dashboard = () => {
     const [isSelected, setIsSelected] = useState(false);
     const [isValidated, setIsValidated] = useState(false);
 
-    const handleSubmission = async (e) => {
+    const handleSubmission = async e => {
         e.preventDefault();
         e.stopPropagation();
 
@@ -31,7 +31,7 @@ const Dashboard = () => {
         }*/
     };
 
-    const onVerify = async (recaptchaResponse) => {
+    const onVerify = async recaptchaResponse => {
         /*try {
             const result = await axios.post('/captcha', '', {
                 params: {
@@ -51,7 +51,7 @@ const Dashboard = () => {
     };
 
     const onError = () => {
-        // TODO: Looks like a weird error... maybe try reloading the site and check your internet connection is stable
+        // Weird Error ... maybe try reloading the site and check if your internet connection is stable
     };
 
     return (
@@ -74,7 +74,7 @@ const Dashboard = () => {
                     </p>
                 )}
 
-                <input type="file" name="file" onChange={(e) => setIsSelected(e.target.value.length > 0)} />
+                <input type="file" name="file" onChange={e => setIsSelected(e.target.value.length > 0)} />
 
                 <div>
                     <input disabled={!isSelected || !isValidated} type="submit" value="Submit" />

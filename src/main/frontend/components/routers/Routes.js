@@ -1,6 +1,6 @@
 const ROUTES = {
-    HOME_DASHBOARD: '/',
+    HOME_USERDASHBOARD: '/',
     UPLOAD_FILE: '/upload'
-}
+};
 
 export default ROUTES;

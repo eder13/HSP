@@ -1,0 +1,11 @@
+.downloadLinkButton {
+    display: grid;
+    background-color: white;
+    place-items: center;
+    width: 48px;
+    height: 40px;
+    border: 2px solid;
+    border-radius: 0.25rem;
+    margin: 5px;
+    transition: color 0.4s, border-color 0.4s;
+}

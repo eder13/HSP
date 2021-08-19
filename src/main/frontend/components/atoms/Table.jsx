@@ -1,13 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import cssClassNamesHelper from '../util/cssClassHelper';
 
-const Table = (props) => {
+const Table = props => {
     const {
         tableRowsAmount,
         tableCellsAmmount,
         tableCellDataOfCorrespondingRowArray,
         tableHeaderData,
-        tableFooterData
+        tableFooterData,
+        additionalStyles,
+        trStyles,
+        skeleton = false
     } = props;
 
     let tableBodyData = [];
@@ -28,14 +32,25 @@ const Table = (props) => {
                         {tableCellDataOfCorrespondingRowArray[rows][column]}
                     </td>
                 );
-            tableBodyData.push(<tr key={rows}>{td.map((jsx) => jsx)}</tr>);
+            tableBodyData.push(
+                <tr style={trStyles} key={rows}>
+                    {td.map(jsx => jsx)}
+                </tr>
+            );
             td = [];
         }
-        return tableBodyData.map((jsx) => jsx);
+        return tableBodyData.map(jsx => jsx);
     };
 
+    const tableStyles = cssClassNamesHelper([
+        'table',
+        'table-xl',
+        !skeleton && 'table-hover',
+        !skeleton && 'table-striped'
+    ]);
+
     return (
-        <table className="table table-xl table-hover table-striped">
+        <table style={additionalStyles} className={tableStyles}>
             {tableHeaderData ? <thead>{tableHeaderData}</thead> : null}
             <tbody>{render()}</tbody>
             {tableFooterData ? <thead>{tableFooterData}</thead> : null}
@@ -48,7 +63,10 @@ Table.propTypes = {
     tableCellsAmmount: PropTypes.number,
     tableCellDataOfCorrespondingRowArray: PropTypes.array,
     tableHeaderData: PropTypes.object,
-    tableFooterData: PropTypes.object
+    tableFooterData: PropTypes.object,
+    additionalStyles: PropTypes.object,
+    trStyles: PropTypes.object,
+    skeleton: PropTypes.bool
 };
 
 export default Table;

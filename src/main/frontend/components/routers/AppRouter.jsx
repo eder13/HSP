@@ -5,17 +5,29 @@ import Navbar from '../ui/navbar/Navbar';
 import Dashboard from '../sites/Dashboard';
 import PrivateRoute from './PrivateRoute';
 import ROUTES from './Routes';
+import { useSelector } from 'react-redux';
+import { selectLoggedIn } from '../../selectors/authSelector';
+import UserDashboard from '../sites/UserDashboard';
 
-const AppRouter = () => (
-    <BrowserRouter>
-        <Navbar />
-        <Switch>
-            {/* TODO -- HOME_DASHBOARD -- if logged in HOME else DASHBOARD */}
-            <Route exact path={ROUTES.HOME_DASHBOARD} component={Home} />
-            <PrivateRoute exact path={ROUTES.UPLOAD_FILE} component={Dashboard} />
-        </Switch>
-        {/* TODO: Footer with Benutzerregeln, Datenschutz und Impressum */}
-    </BrowserRouter>
-);
+const AppRouter = () => {
+    /**
+     * Selectors
+     */
+    const isLoggedIn = useSelector(selectLoggedIn);
+
+    /**
+     * Render
+     */
+    return (
+        <BrowserRouter>
+            <Navbar />
+            <Switch>
+                <Route exact path={ROUTES.HOME_USERDASHBOARD} component={isLoggedIn ? UserDashboard : Home} />
+                <PrivateRoute exact path={ROUTES.UPLOAD_FILE} component={Dashboard} />
+            </Switch>
+            {/* TODO: Footer with Benutzerregeln, Datenschutz und Impressum */}
+        </BrowserRouter>
+    );
+};
 
 export default AppRouter;

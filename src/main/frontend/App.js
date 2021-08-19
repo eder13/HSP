@@ -11,7 +11,6 @@ import clientSystemInfo from './reducers/clientReducer';
 import AppRouter from './components/routers/AppRouter';
 import 'bootswatch/dist/materia/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
-import 'icono/dist/icono.min.css';
 import _ from 'lodash';
 
 const store = configureStore({
