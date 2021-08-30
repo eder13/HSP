@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectLoggedIn } from '../../../selectors/authSelector';
 import { Link, useHistory } from 'react-router-dom';
@@ -13,6 +13,7 @@ import BUTTON_SIZE from '../../../constants/buttonSize';
 import Cookies from 'js-cookie';
 import Icon from '../../atoms/icons/Icon';
 import ICONTYPES from '../../atoms/icons/iconTypes';
+import styles from './Navbar.module.css';
 
 const getLiContent = (isLoggedIn, isMobileNavbarActive) => {
     const linkClasses = cssClassNamesHelper(['nav-link', 'mx-3', isMobileNavbarActive && 'text-center']);
@@ -48,11 +49,13 @@ const getLiContent = (isLoggedIn, isMobileNavbarActive) => {
 const Navbar = () => {
     const history = useHistory();
 
+    const [navbarCollapsed, setNavbarCollapsed] = useState(false);
+
     const isLoggedIn = useSelector(selectLoggedIn);
     const isMobileNavbarActive = useSelector(selectIsMobileNavbar);
+
+    // TODO: Toggle Navbar myself using state
     const additionalNavTogglerProps = {
-        'data-bs-toggle': 'collapse',
-        'data-bs-target': '#navbarColor01',
         'aria-controls': 'navbarColor01',
         'aria-expanded': 'false',
         'aria-label': 'Toggle navigation'
@@ -72,12 +75,31 @@ const Navbar = () => {
         history.push(ROUTES.UPLOAD_FILE);
     };
 
+    const buttonTogglerClassNames = cssClassNamesHelper([
+        !navbarCollapsed ? 'navbar-toggler' : 'navbar-toggler collapse show'
+    ]);
+
+    const collapsedDivClassNames = cssClassNamesHelper([
+        !navbarCollapsed ? 'collapse navbar-collapse' : 'navbar-collapse collapse show'
+    ]);
+
     return (
         <header className="header">
-            <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+            <nav
+                className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top"
+                style={
+                    isMobileNavbarActive
+                        ? {
+                              height: !navbarCollapsed ? '78px' : '306px',
+                              transition: 'all 0.2s ease-in',
+                              ...(!navbarCollapsed ? { flexFlow: 'column' } : {})
+                          }
+                        : {}
+                }
+            >
                 <div className="container-fluid">
                     <Link className="navbar-brand" to="/">
-                        LOGO
+                        LG
                     </Link>
                     {isLoggedIn && (
                         <Button
@@ -90,16 +112,30 @@ const Navbar = () => {
                             Neuer Upload
                         </Button>
                     )}
-                    <Button className="navbar-toggler" additionalProps={additionalNavTogglerProps}>
+                    <Button
+                        id="navbarColor01"
+                        className={buttonTogglerClassNames}
+                        additionalProps={additionalNavTogglerProps}
+                        onClick={() => setNavbarCollapsed(!navbarCollapsed)}
+                    >
                         <span className="navbar-toggler-icon"></span>
                     </Button>
-                    <div className="collapse navbar-collapse" id="navbarColor01">
+                    <div
+                        style={
+                            isMobileNavbarActive
+                                ? { height: !navbarCollapsed ? '78px' : '228px', transition: 'all 0.2s ease-in' }
+                                : {}
+                        }
+                        className={collapsedDivClassNames}
+                        id="navbarColor01"
+                    >
                         <List
-                            ulClassName="navbar-nav me-auto"
+                            ulClassName={`navbar-nav me-auto ${isMobileNavbarActive && styles.fadeIn}`}
                             listItemsContent={getLiContent(isLoggedIn, isMobileNavbarActive)}
                             liClassName="nav-item"
                         />
                         <LoginLogoutButton
+                            containerClassNames={isMobileNavbarActive && styles.fadeIn}
                             isLoggedIn={isLoggedIn}
                             isMobileNavbarActive={isMobileNavbarActive}
                             onLogout={onLogout}

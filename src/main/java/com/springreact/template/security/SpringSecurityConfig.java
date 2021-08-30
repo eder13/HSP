@@ -47,6 +47,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         SimpleUrlAuthenticationFailureHandler handler = new SimpleUrlAuthenticationFailureHandler("/");
 
         http
+                // TODO: What about HttpMethod.OPTIONS? -> deny also?
                 .authorizeRequests(a -> a
                         /// FIXME: Favicon always generates 404 Message
                         .antMatchers("/", "/error", "/built/**", "/images/**").permitAll()
@@ -118,7 +119,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                             Map<String, Object> map = new HashMap<>();
                             map.put("name", oauth2user.getAttribute("name"));
                             map.put("email", oauth2user.getAttribute("email"));
-                            // TODO Picture of User: map.put("picture", oauth2user.getAttribute("picture")) 
+                            /// TODO: get name and picture from session as well like so: oauth2user.getAttribute("name") for response save to db - see Notes
 
                             // check if user logs in the first time -> true: save to database
                             if (userRepository.findUserByEmail(map.get("email").toString()) == null) {

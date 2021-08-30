@@ -7,9 +7,12 @@ const useInitialDashboardData = (userId, currentUploadsPage, currentDownloadsPag
         data: uploadData,
         error: uploadDataError,
         isFetching: isUploadDataLoading
-    } = useGetUserUploadsByIdQuery({ id: userId, page: currentUploadsPage });
-
-    console.log('##### isUploadDataLoadingHook', isUploadDataLoading);
+    } = useGetUserUploadsByIdQuery(
+        { id: userId, page: currentUploadsPage },
+        {
+            selectFromResult: ({ data }) => ({ data })
+        }
+    );
 
     const {
         data: downloadData,
@@ -18,6 +21,11 @@ const useInitialDashboardData = (userId, currentUploadsPage, currentDownloadsPag
     } = useGetUserDownloadsByIdQuery(userId); // TODO: currentDownloadsPage
 
     // TODO: check if any error occured --> return first error if so
+    //       the following Types are also returned from the hook:
+    //          * isLoading (for initial Loading only, not for refetching)
+    //          * status
+    //          * isSuccess
+    //          * isError
 
     return {
         isUserDataLoading,

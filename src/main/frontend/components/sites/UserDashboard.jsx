@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, memo } from 'react';
 import useInitialDashboardData from '../../hooks/useInitialDashboarData';
+import { usePatchUserUploadsByIdMutation } from '../../middleware/api';
 import Table from '../atoms/Table';
 import Pagination from '../atoms/Pagination';
 import Button from '../atoms/Button';
@@ -17,36 +18,102 @@ import Icon from '../atoms/icons/Icon';
 import ICONTYPES from '../atoms/icons/iconTypes';
 import ICONSIZE from '../atoms/icons/iconSize';
 import styles from './UserDashboard.module.css';
-import usePrevious from '../../hooks/usePrevious';
 import TableSkeleton from '../atoms/TableSkeleton';
+import TABLE_SKELETON from '../atoms/tableSkeletonType';
+import InputSearch from '../atoms/input-search/InputSearch';
+import Modal from '../atoms/Modal';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { isEmpty } from 'lodash';
+import Cookies from 'js-cookie';
+import { create } from 'ladda';
+import 'ladda/dist/ladda-themeless.min.css';
 
 const UserDashboard = () => {
     const [currentPage, setCurrentPage] = useState(0);
+    const [modalInstance, setModalInstance] = useState(null);
+    const [modalTitle, setModalTitle] = useState('Modal Title');
+    const [modalBody, setModalBody] = useState({ id: -1, name: 'not-selected' });
+    const [laddaBtnInstance, setLaddaBtnInstance] = useState(null);
+    const [isModalSubmitting, setIsModalSubmitting] = useState(false);
 
     const username = useSelector(selectUser);
     const userId = useSelector(selectUserId);
     const isMobile = useSelector(selectIsMobile);
 
     const $myUploadsHeadingRef = useRef();
+    const $myDownloadsHeadingRef = useRef();
+
+    const $laddaBtnRef = useRef();
 
     const uploadHeadingClasses = cssClassNamesHelper(['mt-2 mb-4', isMobile && 'mt-3']);
 
-    /// TODO: isNextPaginationLoading
-    let { isUserDataLoading, isDownloadDataLoading, isUploadDataLoading, error, data } = useInitialDashboardData(
+    const onRegisterModal = modalInstance => setModalInstance(modalInstance);
+
+    //console.log('##### modalInstance: ', modalInstance?._config);
+
+    useEffect(() => {
+        if ($laddaBtnRef.current) setLaddaBtnInstance(create($laddaBtnRef.current));
+    }, []);
+
+    //console.log('##### laddaBtnInstance', laddaBtnInstance);
+
+    /// TODO: Filter out Errors -> Message under Navbar + refresh site button (const rerender = useForceRerender -- onClick Button: rerender())
+    const { isUserDataLoading, isDownloadDataLoading, isUploadDataLoading, error, data } = useInitialDashboardData(
         userId,
         currentPage,
         undefined
     );
-    // initial big load: execution of all queries at once to get page data
+
+    /*
+    const {
+        data: uploadData,
+        error: uploadDataError,
+        isFetching: isUploadDataLoading
+    } = useGetUserUploadsByIdQuery(
+        { id: userId, page: currentUploadsPage },
+        {
+            selectFromResult: ({ data }) => {
+                console.log('##### selectFromResult', data);
+                return { uploadData: data };
+            }
+        }
+    );
+    */
+
+    // select
+    /*
+    const {
+        data: uploadData,
+        error: uploadDataError,
+        isFetching: isUploadDataLoading
+    } = useGetUserUploadsByIdQuery(
+        { id: userId, page: currentUploadsPage },
+        {
+            selectFromResult: ({ data }) => {
+                console.log('##### selectFromResult', data);
+                return { uploadData: data };
+            }
+        }
+    );
+    */
+
+    const [
+        patchUserUploadWithId,
+        {
+            status: patchStatus,
+            error: patchUploadError,
+            data: patchedData,
+            isUninitialized,
+            isLoading,
+            isSuccess,
+            isError
+        }
+    ] = usePatchUserUploadsByIdMutation();
+
+    // TODO: just set Skeletons everywhere
     const initialLoad = isUserDataLoading && isDownloadDataLoading && isUploadDataLoading;
 
-    if (initialLoad) {
-        return (
-            <div className="vw-100 vh-100 d-flex flex-row align-items-center justify-content-center">
-                <Loader />
-            </div>
-        );
-    }
+    console.log('##### all data', data);
 
     /**
      * Selectors
@@ -62,7 +129,14 @@ const UserDashboard = () => {
                     <Icon iconType={ICONTYPES.DOWNLOAD} size={ICONSIZE.SIZE_1_5X} additionalStyles={{ top: '4px' }} />
                 </a>
                 <Button
-                    //onClick={() => setEditMode(editState => !editState)}
+                    onClick={() => {
+                        setModalTitle(`${upload?.name} bearbeiten`);
+                        setModalBody({
+                            id: upload?._links.upload?.href,
+                            name: upload?.name
+                        });
+                        modalInstance.show();
+                    }}
                     onMouseOver={e => {
                         if (e.target.type === 'button') {
                             e.currentTarget.style.borderColor = '#b67108';
@@ -183,185 +257,163 @@ const UserDashboard = () => {
                                             Meine Uploads {'⬆️'}
                                         </h2>
                                         {isUploadDataLoading ? (
-                                            <div
-                                                style={{
-                                                    width: '100%',
-                                                    height: '38px',
-                                                    backgroundColor: '#e8e8e8'
-                                                }}
-                                            ></div>
+                                            <>
+                                                <InputSearch showSkeleton={true} />
+                                                <TableSkeleton type={TABLE_SKELETON.UPLOADS} />
+                                            </>
                                         ) : (
-                                            <div className="input-group mb-3">
-                                                <input
-                                                    type="text"
-                                                    className="form-control form-control-sm"
-                                                    placeholder="Durchsuche Uploads ..."
-                                                />
-                                                <Button
-                                                    buttonSize={BUTTON_SIZE.NORMAL}
-                                                    variant={BUTTON_VARIANT.BTN_SECONDARY}
-                                                    additionalStyles={{}}
-                                                >
-                                                    <Icon iconType={ICONTYPES.SEARCH} size={ICONSIZE.SIZE_1_5X} />
-                                                </Button>
-                                            </div>
-                                        )}
-
-                                        {isUploadDataLoading ? (
-                                            <TableSkeleton />
-                                        ) : (
-                                            data?.uploadData && (
-                                                <>
-                                                    <Table
-                                                        tableHeaderData={
-                                                            <tr
-                                                                style={{
-                                                                    color: 'white',
-                                                                    backgroundColor: '#2196f3',
-                                                                    borderBottom: '3px solid #333'
-                                                                }}
-                                                            >
-                                                                <td
+                                            <>
+                                                <InputSearch inputPlaceholder="Durchsuche Uploads ..." />
+                                                {data?.uploadData && (
+                                                    <>
+                                                        <Table
+                                                            tableHeaderData={
+                                                                <tr
                                                                     style={{
-                                                                        verticalAlign: 'middle'
+                                                                        color: 'white',
+                                                                        backgroundColor: '#2196f3',
+                                                                        borderBottom: '3px solid #333'
                                                                     }}
                                                                 >
-                                                                    <span
+                                                                    <td
                                                                         style={{
-                                                                            borderBottom: '1px dotted white'
+                                                                            verticalAlign: 'middle'
                                                                         }}
                                                                     >
-                                                                        Name
-                                                                    </span>
-                                                                </td>
-                                                                <td
-                                                                    style={{
-                                                                        verticalAlign: 'middle'
-                                                                    }}
-                                                                >
-                                                                    <span
+                                                                        <span
+                                                                            style={{
+                                                                                borderBottom: '1px dotted white'
+                                                                            }}
+                                                                        >
+                                                                            Name
+                                                                        </span>
+                                                                    </td>
+                                                                    <td
                                                                         style={{
-                                                                            borderBottom: '1px dotted white'
+                                                                            verticalAlign: 'middle'
                                                                         }}
                                                                     >
-                                                                        Upload Datum
-                                                                    </span>
-                                                                </td>
-                                                                <td
-                                                                    style={{
-                                                                        verticalAlign: 'middle'
-                                                                    }}
-                                                                ></td>
-                                                            </tr>
-                                                        }
-                                                        tableRowsAmount={data?.uploadData?._embedded?.uploads?.length}
-                                                        tableCellsAmmount={3}
-                                                        tableCellDataOfCorrespondingRowArray={getTableData()}
-                                                        additionalStyles={{
-                                                            borderTopLeftRadius: '3px',
-                                                            borderTopRightRadius: '3px',
-                                                            overflow: 'hidden'
-                                                        }}
-                                                    />
-                                                    {/* 0 = 1 etc. --> Array Counting */}
-                                                    <Pagination
-                                                        gettingDataCallbackArray={[
-                                                            ...new Array(data?.uploadData?.page?.totalPages)
-                                                        ].map((_, index) => () => setCurrentPage(index))}
-                                                        currentSelection={data?.uploadData?.page?.number}
-                                                        ref={$myUploadsHeadingRef}
-                                                        prev={data?.uploadData?._links?.prev?.href}
-                                                        next={data?.uploadData?._links?.next?.href}
-                                                        first={data?.uploadData?._links?.first?.href}
-                                                        last={data?.uploadData?._links?.last?.href}
-                                                        setPage={setCurrentPage}
-                                                    />
-                                                </>
-                                            )
+                                                                        <span
+                                                                            style={{
+                                                                                borderBottom: '1px dotted white'
+                                                                            }}
+                                                                        >
+                                                                            Upload Datum
+                                                                        </span>
+                                                                    </td>
+                                                                    <td
+                                                                        style={{
+                                                                            verticalAlign: 'middle'
+                                                                        }}
+                                                                    ></td>
+                                                                </tr>
+                                                            }
+                                                            tableRowsAmount={
+                                                                data?.uploadData?._embedded?.uploads?.length
+                                                            }
+                                                            tableCellsAmmount={3}
+                                                            tableCellDataOfCorrespondingRowArray={getTableData()}
+                                                            additionalStyles={{
+                                                                borderTopLeftRadius: '3px',
+                                                                borderTopRightRadius: '3px',
+                                                                overflow: 'hidden'
+                                                            }}
+                                                        />
+                                                        {/* 0 = 1 etc. --> Array Counting */}
+                                                        <Pagination
+                                                            gettingDataCallbackArray={[
+                                                                ...new Array(data?.uploadData?.page?.totalPages)
+                                                            ].map((_, index) => () => setCurrentPage(index))}
+                                                            currentSelection={data?.uploadData?.page?.number}
+                                                            ref={$myUploadsHeadingRef}
+                                                            prev={data?.uploadData?._links?.prev?.href}
+                                                            next={data?.uploadData?._links?.next?.href}
+                                                            first={data?.uploadData?._links?.first?.href}
+                                                            last={data?.uploadData?._links?.last?.href}
+                                                            setPage={setCurrentPage}
+                                                        />
+                                                    </>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                     <div className="col-md-12">
                                         <h2 className="mt-2 mb-4">Meine Downloads {'⬇️'}</h2>
-                                        <div className="input-group mb-3">
-                                            <input
-                                                type="text"
-                                                className="form-control form-control-sm"
-                                                placeholder="Durchsuche Downloads ..."
-                                            />
-                                            <Button
-                                                buttonSize={BUTTON_SIZE.NORMAL}
-                                                variant={BUTTON_VARIANT.BTN_SECONDARY}
-                                            >
-                                                <Icon iconType={ICONTYPES.SEARCH} size={ICONSIZE.SIZE_1_5X} />
-                                            </Button>
-                                        </div>
-                                        {isUploadDataLoading ? (
-                                            <div>Upload Data Loading ...</div>
+                                        {isDownloadDataLoading ? (
+                                            <>
+                                                <InputSearch showSkeleton={true} />
+                                                <TableSkeleton type={TABLE_SKELETON.DOWNLOADS} />
+                                            </>
                                         ) : (
-                                            data?.downloadData && (
-                                                <>
-                                                    <Table
-                                                        tableHeaderData={
-                                                            <tr
-                                                                style={{
-                                                                    color: 'white',
-                                                                    backgroundColor: '#2196f3',
-                                                                    borderBottom: '3px solid #333'
-                                                                }}
-                                                            >
-                                                                <td
+                                            <>
+                                                <InputSearch inputPlaceholder="Durchsuche Downloads ..." />
+                                                {data?.downloadData && (
+                                                    <>
+                                                        <Table
+                                                            tableHeaderData={
+                                                                <tr
                                                                     style={{
-                                                                        verticalAlign: 'middle'
+                                                                        color: 'white',
+                                                                        backgroundColor: '#2196f3',
+                                                                        borderBottom: '3px solid #333'
                                                                     }}
                                                                 >
-                                                                    <span
+                                                                    <td
                                                                         style={{
-                                                                            borderBottom: '1px dotted white'
+                                                                            verticalAlign: 'middle'
                                                                         }}
                                                                     >
-                                                                        Name
-                                                                    </span>
-                                                                </td>
-                                                                <td
-                                                                    style={{
-                                                                        verticalAlign: 'middle'
-                                                                    }}
-                                                                >
-                                                                    <span
+                                                                        <span
+                                                                            style={{
+                                                                                borderBottom: '1px dotted white'
+                                                                            }}
+                                                                        >
+                                                                            Name
+                                                                        </span>
+                                                                    </td>
+                                                                    <td
                                                                         style={{
-                                                                            borderBottom: '1px dotted white'
+                                                                            verticalAlign: 'middle'
                                                                         }}
                                                                     >
-                                                                        Upload Datum
-                                                                    </span>
-                                                                </td>
-                                                                <td
-                                                                    style={{
-                                                                        verticalAlign: 'middle'
-                                                                    }}
-                                                                >
-                                                                    <span
+                                                                        <span
+                                                                            style={{
+                                                                                borderBottom: '1px dotted white'
+                                                                            }}
+                                                                        >
+                                                                            Upload Datum
+                                                                        </span>
+                                                                    </td>
+                                                                    <td
                                                                         style={{
-                                                                            borderBottom: '1px dotted white'
+                                                                            verticalAlign: 'middle'
                                                                         }}
                                                                     >
-                                                                        AutorIn
-                                                                    </span>
-                                                                </td>
-                                                                <td>{}</td>
-                                                            </tr>
-                                                        }
-                                                        tableRowsAmount={data?.downloadData?._embedded?.uploads?.length}
-                                                        tableCellsAmmount={4}
-                                                        tableCellDataOfCorrespondingRowArray={getDownloadsTableData()}
-                                                        additionalStyles={{
-                                                            borderTopLeftRadius: '3px',
-                                                            borderTopRightRadius: '3px',
-                                                            overflow: 'hidden'
-                                                        }}
-                                                    />
-                                                </>
-                                            )
+                                                                        <span
+                                                                            style={{
+                                                                                borderBottom: '1px dotted white'
+                                                                            }}
+                                                                        >
+                                                                            AutorIn
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>{}</td>
+                                                                </tr>
+                                                            }
+                                                            tableRowsAmount={
+                                                                data?.downloadData?._embedded?.uploads?.length
+                                                            }
+                                                            tableCellsAmmount={4}
+                                                            tableCellDataOfCorrespondingRowArray={getDownloadsTableData()}
+                                                            additionalStyles={{
+                                                                borderTopLeftRadius: '3px',
+                                                                borderTopRightRadius: '3px',
+                                                                overflow: 'hidden'
+                                                            }}
+                                                        />
+                                                    </>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                 </div>
@@ -370,8 +422,84 @@ const UserDashboard = () => {
                     </div>
                 </div>
             </div>
+            <Modal
+                onRegisterModal={onRegisterModal}
+                title={modalTitle}
+                footer="footertest"
+                disableClose={isModalSubmitting}
+            >
+                <Formik
+                    enableReinitialize={true}
+                    initialValues={{ id: modalBody.id, name: modalBody.name }}
+                    validate={values => {
+                        const errors = {};
+                        if (isEmpty(values.name)) {
+                            errors.name = 'Not Empty';
+                        }
+                        return errors;
+                    }}
+                    onSubmit={async (values, { setSubmitting }) => {
+                        // this disables outer click and esc key press to dismiss modal
+                        modalInstance._config.backdrop = false;
+                        modalInstance._config.keyboard = false;
+
+                        // start ladda animation
+                        laddaBtnInstance.start();
+
+                        // set submitting to true for modal and formik
+                        setSubmitting(true);
+                        setIsModalSubmitting(true);
+
+                        try {
+                            /// FIXME: Remove this, just for testing purposes to see if setSubmitting Works
+                            await new Promise((resolve, _) => setTimeout(() => resolve(), 4000));
+
+                            await patchUserUploadWithId({
+                                id: modalBody.id,
+                                body: { name: values.name }
+                            }).unwrap();
+
+                            modalInstance.hide();
+                        } catch (e) {
+                            // TODO: Show Error inside Modal if any occurs
+                            console.log('e', e);
+                        } finally {
+                            setSubmitting(false);
+                            setIsModalSubmitting(false);
+                            laddaBtnInstance.stop();
+                            modalInstance._config.backdrop = true;
+                            modalInstance._config.keyboard = true;
+                        }
+                    }}
+                >
+                    {formik => {
+                        const { isSubmitting } = formik;
+                        return (
+                            <Form>
+                                <Field type="id" name="id" hidden />
+                                <Field type="name" name="name" />
+                                <ErrorMessage name="name" component="div" />
+                                <Button
+                                    type="submit"
+                                    variant={BUTTON_VARIANT.BTN_PRIMARY}
+                                    id="update-upload-test"
+                                    disabled={isSubmitting}
+                                    additionalClassNames="ladda-button"
+                                    ref={$laddaBtnRef}
+                                    additionalProps={{ 'data-style': 'expand-right' }}
+                                >
+                                    Update
+                                </Button>
+                                <Button id="delete-upload" disabled={isSubmitting} variant={BUTTON_VARIANT.BTN_DANGER}>
+                                    Löschen
+                                </Button>
+                            </Form>
+                        );
+                    }}
+                </Formik>
+            </Modal>
         </main>
     );
 };
 
-export default UserDashboard;
+export default memo(UserDashboard);

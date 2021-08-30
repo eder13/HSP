@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import { BUTTON_VARIANT } from '../../constants/buttonVariants';
 import cssClassNamesHelper from '../util/cssClassHelper';
 import BUTTON_SIZE from '../../constants/buttonSize';
 
-const Button = props => {
+const Button = forwardRef((props, ref) => {
     const {
         id = '',
         className = '',
@@ -12,6 +12,8 @@ const Button = props => {
         buttonSize = BUTTON_SIZE.NORMAL,
         type = 'button',
         children = 'My Button Text',
+        disabled = false,
+        additionalClassNames = '',
         additionalStyles,
         additionalProps,
         onClick = () => {},
@@ -19,10 +21,17 @@ const Button = props => {
         onMouseOut = () => {}
     } = props;
 
-    const buttonClasses = cssClassNamesHelper([variant, buttonSize, className]);
+    const buttonClasses = cssClassNamesHelper([
+        variant,
+        buttonSize,
+        className,
+        disabled && 'disabled',
+        additionalClassNames
+    ]);
 
     return (
         <button
+            ref={ref}
             onClick={onClick}
             onMouseOver={onMouseOver}
             onMouseOut={onMouseOut}
@@ -35,7 +44,7 @@ const Button = props => {
             {children}
         </button>
     );
-};
+});
 
 Button.propTypes = {
     id: PropTypes.string,
@@ -44,11 +53,15 @@ Button.propTypes = {
     buttonSize: PropTypes.string,
     type: PropTypes.string,
     children: PropTypes.any,
+    disabled: PropTypes.bool,
+    additionalClassNames: PropTypes.string,
     additionalStyles: PropTypes.object,
     additionalProps: PropTypes.object,
     onClick: PropTypes.func,
     onMouseOver: PropTypes.func,
     onMouseOut: PropTypes.func
 };
+
+Button.displayName = 'Button';
 
 export default Button;

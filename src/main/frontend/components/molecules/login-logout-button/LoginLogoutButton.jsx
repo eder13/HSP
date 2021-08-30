@@ -10,8 +10,13 @@ import Icon from '../../atoms/icons/Icon';
 import ICONTYPES from '../../atoms/icons/iconTypes';
 import ICONSIZE from '../../atoms/icons/iconSize';
 
-const LoginLogoutButton = ({ isLoggedIn, isMobileNavbarActive, onLogout }) => {
-    const containerStyles = cssClassNamesHelper(['d-flex', 'justify-content-center', isMobileNavbarActive && 'mt-5']);
+const LoginLogoutButton = ({ isLoggedIn, isMobileNavbarActive, onLogout, containerClassNames = '' }) => {
+    const containerStyles = cssClassNamesHelper([
+        containerClassNames,
+        'd-flex',
+        'justify-content-center',
+        isMobileNavbarActive && 'mt-5'
+    ]);
     const logoutBtnStyles = cssClassNamesHelper(['my-2 px-4 my-sm-0', styles.logoutButton]);
 
     return (
