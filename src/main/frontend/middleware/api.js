@@ -2,18 +2,32 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import Cookies from 'js-cookie';
 import API_ENDPOINTS from './endpoints';
 
-/// TODO: Replace fetch with axios since with axios
-///       there wont be a redirect if API Request fails to
-///       /api endpoint, which is annoying OR seperate Frontend
-///       with Backend
+/// TODO: Seperate frontend from backend since with fetch sometimes
+///       there happens a redirect if you want to get logged in to somewhere.
+///       Alternatively, replace fetch with axios
 export const api = createApi({
     reducerPath: 'api',
+
+    // TODO: For using Cookies for Cross Site Login, set credentials to 'include' so
+    // that cookies are send within the request when using fetch
+    /* 
+    fetch('/some-route', {
+        method: 'GET',
+        headers: { 
+            ...
+        }, 
+        body: ...,
+        credentials: 'include' // this automatically sets cookies with every request
+    });
+    */
+
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.API_BASE,
         prepareHeaders: (headers, { getState }) => {
             headers.set('X-XSRF-TOKEN', Cookies.get('XSRF-TOKEN'));
             return headers;
-        }
+        },
+        credentials: 'include' // TODO: this allows to send cookies with fetch
     }),
     tagTypes: ['UserData'],
     endpoints: builder => ({

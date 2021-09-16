@@ -27,6 +27,7 @@ import { isEmpty } from 'lodash';
 import Cookies from 'js-cookie';
 import { create } from 'ladda';
 import 'ladda/dist/ladda-themeless.min.css';
+import { getPropertyNameAsString } from '../util/jsobjectUtils';
 
 const UserDashboard = () => {
     const [currentPage, setCurrentPage] = useState(0);
@@ -49,7 +50,10 @@ const UserDashboard = () => {
 
     const onRegisterModal = modalInstance => setModalInstance(modalInstance);
 
-    //console.log('##### modalInstance: ', modalInstance?._config);
+    const formFieldsAndValues = {
+        id: modalBody.id,
+        name: modalBody.name
+    };
 
     useEffect(() => {
         if ($laddaBtnRef.current) setLaddaBtnInstance(create($laddaBtnRef.current));
@@ -430,7 +434,7 @@ const UserDashboard = () => {
             >
                 <Formik
                     enableReinitialize={true}
-                    initialValues={{ id: modalBody.id, name: modalBody.name }}
+                    initialValues={formFieldsAndValues}
                     validate={values => {
                         const errors = {};
                         if (isEmpty(values.name)) {
@@ -464,7 +468,6 @@ const UserDashboard = () => {
                             // TODO: Show Error inside Modal if any occurs
                             console.log('e', e);
                         } finally {
-                            setSubmitting(false);
                             setIsModalSubmitting(false);
                             laddaBtnInstance.stop();
                             modalInstance._config.backdrop = true;
@@ -476,9 +479,19 @@ const UserDashboard = () => {
                         const { isSubmitting } = formik;
                         return (
                             <Form>
-                                <Field type="id" name="id" hidden />
-                                <Field type="name" name="name" />
-                                <ErrorMessage name="name" component="div" />
+                                <Field
+                                    type="text"
+                                    name={getPropertyNameAsString(formFieldsAndValues, formFieldsAndValues.id)}
+                                    hidden
+                                />
+                                <Field
+                                    type="text"
+                                    name={getPropertyNameAsString(formFieldsAndValues, formFieldsAndValues.name)}
+                                />
+                                <ErrorMessage
+                                    name={getPropertyNameAsString(formFieldsAndValues, formFieldsAndValues.name)}
+                                    component="div"
+                                />
                                 <Button
                                     type="submit"
                                     variant={BUTTON_VARIANT.BTN_PRIMARY}
