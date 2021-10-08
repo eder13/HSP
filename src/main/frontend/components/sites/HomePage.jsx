@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { selectIsMobileNavbar } from '../../selectors/clientInfoSelector';
 import ShowCase from '../ui/home-showcase/ShowCase';
 
-const Home = () => {
+const HomePage = () => {
     const isMobileNavDisplayed = useSelector(selectIsMobileNavbar);
 
     const renderHomepage = () => {
@@ -20,4 +20,4 @@ const Home = () => {
     return renderHomepage();
 };
 
-export default Home;
+export default HomePage;

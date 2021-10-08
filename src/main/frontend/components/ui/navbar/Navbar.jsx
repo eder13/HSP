@@ -26,7 +26,7 @@ const getLiContent = (isLoggedIn, isMobileNavbarActive) => {
     );
     const li2 = isLoggedIn ? (
         <Link className={linkClasses} to="">
-            Unterrichtsmaterialien
+            Alle Uploads
         </Link>
     ) : (
         <a className={`${linkClasses}`} href="#">
@@ -61,10 +61,6 @@ const Navbar = () => {
         'aria-label': 'Toggle navigation'
     };
 
-    /* const iconoUpArrowStyle = {
-        width: '12px', height: '4px', margin: 0, marginRight: '10px'
-    } */
-
     const onLogout = async () => {
         const req = await fetch('/logout', { method: 'post', headers: { 'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN') } });
         await req.ok;
@@ -86,7 +82,7 @@ const Navbar = () => {
     return (
         <header className="header">
             <nav
-                className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top"
+                className="navbar navbar-expand-lg navbar-dark bg-primary"
                 style={
                     isMobileNavbarActive
                         ? {

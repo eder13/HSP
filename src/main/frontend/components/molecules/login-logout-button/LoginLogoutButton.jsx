@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import cssClassNamesHelper from '../../util/cssClassHelper';
 import styles from './LoginLogoutButton.module.css';
 import Button from '../../atoms/Button';
-import GoogleButton from '../google-sign-button/GoogleButton';
+import GoogleButton from '../../atoms/google-sign-button/GoogleButton';
 import { BUTTON_VARIANT_LIGHT } from '../../../constants/buttonVariants';
 import BUTTON_SIZE from '../../../constants/buttonSize';
 import Icon from '../../atoms/icons/Icon';
@@ -15,7 +15,7 @@ const LoginLogoutButton = ({ isLoggedIn, isMobileNavbarActive, onLogout, contain
         containerClassNames,
         'd-flex',
         'justify-content-center',
-        isMobileNavbarActive && 'mt-5'
+        isMobileNavbarActive && 'mt-2'
     ]);
     const logoutBtnStyles = cssClassNamesHelper(['my-2 px-4 my-sm-0', styles.logoutButton]);
 

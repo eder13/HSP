@@ -1,106 +1,51 @@
-import React, { useState, useRef, useEffect, memo } from 'react';
+import React, { useState, memo } from 'react';
 import useInitialDashboardData from '../../hooks/useInitialDashboarData';
 import { usePatchUserUploadsByIdMutation } from '../../middleware/api';
 import Table from '../atoms/Table';
 import Pagination from '../atoms/Pagination';
 import Button from '../atoms/Button';
-import BUTTON_SIZE from '../../constants/buttonSize';
 import { BUTTON_VARIANT } from '../../constants/buttonVariants';
-import { Link } from 'react-router-dom';
 import { parseSQLDateToJavaScript } from '../util/dateParserUtil';
 import { useSelector } from 'react-redux';
 import { selectUser, selectUserId } from '../../selectors/authSelector';
 import Image from '../atoms/Image';
 import cssClassNamesHelper from '../util/cssClassHelper';
 import { selectIsMobile } from '../../selectors/clientInfoSelector';
-import Loader from '../atoms/loader/Loader';
 import Icon from '../atoms/icons/Icon';
 import ICONTYPES from '../atoms/icons/iconTypes';
 import ICONSIZE from '../atoms/icons/iconSize';
-import styles from './UserDashboard.module.css';
+import styles from './UserDashboardPage.module.css';
 import TableSkeleton from '../atoms/TableSkeleton';
 import TABLE_SKELETON from '../atoms/tableSkeletonType';
 import InputSearch from '../atoms/input-search/InputSearch';
 import Modal from '../atoms/Modal';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { isEmpty } from 'lodash';
-import Cookies from 'js-cookie';
-import { create } from 'ladda';
-import 'ladda/dist/ladda-themeless.min.css';
 import { getPropertyNameAsString } from '../util/jsobjectUtils';
+import LaddaButton from '../atoms/LaddaButton';
 
-const UserDashboard = () => {
+const UserDashboardPage = () => {
+    /**
+     * State, Selectors
+     */
     const [currentPage, setCurrentPage] = useState(0);
-    const [modalInstance, setModalInstance] = useState(null);
+    const [modalInstanceCb, setModalInstanceCb] = useState(null);
     const [modalTitle, setModalTitle] = useState('Modal Title');
     const [modalBody, setModalBody] = useState({ id: -1, name: 'not-selected' });
-    const [laddaBtnInstance, setLaddaBtnInstance] = useState(null);
     const [isModalSubmitting, setIsModalSubmitting] = useState(false);
-
+    const [laddaStartStopCb, setLaddaStartStopCb] = useState(undefined);
     const username = useSelector(selectUser);
     const userId = useSelector(selectUserId);
     const isMobile = useSelector(selectIsMobile);
 
-    const $myUploadsHeadingRef = useRef();
-    const $myDownloadsHeadingRef = useRef();
-
-    const $laddaBtnRef = useRef();
-
-    const uploadHeadingClasses = cssClassNamesHelper(['mt-2 mb-4', isMobile && 'mt-3']);
-
-    const onRegisterModal = modalInstance => setModalInstance(modalInstance);
-
-    const formFieldsAndValues = {
-        id: modalBody.id,
-        name: modalBody.name
-    };
-
-    useEffect(() => {
-        if ($laddaBtnRef.current) setLaddaBtnInstance(create($laddaBtnRef.current));
-    }, []);
-
-    //console.log('##### laddaBtnInstance', laddaBtnInstance);
-
-    /// TODO: Filter out Errors -> Message under Navbar + refresh site button (const rerender = useForceRerender -- onClick Button: rerender())
+    /**
+     * Hooks
+     */ /// TODO: Filter out Errors -> Message under Navbar + refresh site button (const rerender = useForceRerender -- onClick Button: rerender())
     const { isUserDataLoading, isDownloadDataLoading, isUploadDataLoading, error, data } = useInitialDashboardData(
         userId,
         currentPage,
         undefined
     );
-
-    /*
-    const {
-        data: uploadData,
-        error: uploadDataError,
-        isFetching: isUploadDataLoading
-    } = useGetUserUploadsByIdQuery(
-        { id: userId, page: currentUploadsPage },
-        {
-            selectFromResult: ({ data }) => {
-                console.log('##### selectFromResult', data);
-                return { uploadData: data };
-            }
-        }
-    );
-    */
-
-    // select
-    /*
-    const {
-        data: uploadData,
-        error: uploadDataError,
-        isFetching: isUploadDataLoading
-    } = useGetUserUploadsByIdQuery(
-        { id: userId, page: currentUploadsPage },
-        {
-            selectFromResult: ({ data }) => {
-                console.log('##### selectFromResult', data);
-                return { uploadData: data };
-            }
-        }
-    );
-    */
-
     const [
         patchUserUploadWithId,
         {
@@ -114,16 +59,19 @@ const UserDashboard = () => {
         }
     ] = usePatchUserUploadsByIdMutation();
 
-    // TODO: just set Skeletons everywhere
-    const initialLoad = isUserDataLoading && isDownloadDataLoading && isUploadDataLoading;
-
-    console.log('##### all data', data);
-
     /**
-     * Selectors
-     * */
+     * Variables, Callbacks, Sub-Render Logic, ClassNames
+     */
+    const onRegisterModal = modalBSInstance => setModalInstanceCb(modalBSInstance);
+    const uploadHeadingClasses = cssClassNamesHelper(['mt-2 mb-4', isMobile && 'mt-3']);
+    const formFieldsAndValues = {
+        id: modalBody.id,
+        name: modalBody.name
+    };
+    const initialLoad = isUserDataLoading && isDownloadDataLoading && isUploadDataLoading; // TODO: Set Skeletons everywhere
     const joinedDate = parseSQLDateToJavaScript(data?.userData?.joined);
 
+    // TODO: Replace with react-table
     const getTableData = () => {
         return data?.uploadData?._embedded?.uploads.map((upload, i) => [
             upload?.name,
@@ -139,27 +87,7 @@ const UserDashboard = () => {
                             id: upload?._links.upload?.href,
                             name: upload?.name
                         });
-                        modalInstance.show();
-                    }}
-                    onMouseOver={e => {
-                        if (e.target.type === 'button') {
-                            e.currentTarget.style.borderColor = '#b67108';
-                            e.currentTarget.style.backgroundColor = 'white';
-                            e.target.children[0].style.color = '#b67108';
-                        } else {
-                            e.currentTarget.style.borderColor = '#b67108';
-                            e.currentTarget.style.backgroundColor = 'white';
-                            e.target.style.color = '#b67108';
-                        }
-                    }}
-                    onMouseOut={e => {
-                        if (e.currentTarget.type === 'button') {
-                            e.currentTarget.style.borderColor = '#ff9800';
-                            e.currentTarget.style.backgroundColor = 'white';
-                            if (e.target.children[0] !== undefined) {
-                                e.target.children[0].style.color = '#ff9800';
-                            }
-                        }
+                        modalInstanceCb.show();
                     }}
                     variant={BUTTON_VARIANT.BTN_WARNING}
                     additionalStyles={{
@@ -180,8 +108,6 @@ const UserDashboard = () => {
             </div>
         ]);
     };
-
-    // TODO: Table Entries Name and Autor --> Handle long Names so that it does not overflow whole page!
     const getDownloadsTableData = () => {
         return data?.downloadData?._embedded?.uploads.map(download => [
             download?.name,
@@ -193,6 +119,9 @@ const UserDashboard = () => {
         ]);
     };
 
+    /**
+     * Render
+     */
     return (
         <main>
             <h1 className="text-center mx-2 mt-4">Meine Uploads & Downloads</h1>
@@ -222,14 +151,9 @@ const UserDashboard = () => {
                     <div className="col-lg-8 order-lg-2">
                         <ul className="nav nav-tabs">
                             <li className="nav-item">
-                                <Link
-                                    onClick={() => null}
-                                    to="/"
-                                    className="nav-link active"
-                                    style={{ cursor: 'default' }}
-                                >
+                                <span className="nav-link active" style={{ cursor: 'default' }}>
                                     Profil
-                                </Link>
+                                </span>
                             </li>
                         </ul>
                         <div className="tab-content py-4">
@@ -239,13 +163,10 @@ const UserDashboard = () => {
                                     <div className="col-md-6">
                                         <h6>Mitglied seit</h6>
                                         <p>{joinedDate}</p>
-                                        <h6>Uploads</h6>
-                                        <p>{data?.userData?.uploadCount}</p>
                                     </div>
                                     <div className="col-md-6">
-                                        {/* TODO: Badges Achievement */}
-                                        <h6>Auszeichnungen</h6>
-                                        <span className="badge bg-dark">Junior</span>
+                                        <h6>Uploads</h6>
+                                        <p>{data?.userData?.uploadCount}</p>
                                     </div>
                                     {isMobile && (
                                         <hr
@@ -257,9 +178,7 @@ const UserDashboard = () => {
                                         />
                                     )}
                                     <div className="col-md-12">
-                                        <h2 ref={$myUploadsHeadingRef} className={uploadHeadingClasses}>
-                                            Meine Uploads {'⬆️'}
-                                        </h2>
+                                        <h2 className={uploadHeadingClasses}>Meine Uploads {'⬆️'}</h2>
                                         {isUploadDataLoading ? (
                                             <>
                                                 <InputSearch showSkeleton={true} />
@@ -329,7 +248,6 @@ const UserDashboard = () => {
                                                                 ...new Array(data?.uploadData?.page?.totalPages)
                                                             ].map((_, index) => () => setCurrentPage(index))}
                                                             currentSelection={data?.uploadData?.page?.number}
-                                                            ref={$myUploadsHeadingRef}
                                                             prev={data?.uploadData?._links?.prev?.href}
                                                             next={data?.uploadData?._links?.next?.href}
                                                             first={data?.uploadData?._links?.first?.href}
@@ -444,11 +362,11 @@ const UserDashboard = () => {
                     }}
                     onSubmit={async (values, { setSubmitting }) => {
                         // this disables outer click and esc key press to dismiss modal
-                        modalInstance._config.backdrop = false;
-                        modalInstance._config.keyboard = false;
+                        modalInstanceCb._config.backdrop = false;
+                        modalInstanceCb._config.keyboard = false;
 
                         // start ladda animation
-                        laddaBtnInstance.start();
+                        laddaStartStopCb?.startLoading();
 
                         // set submitting to true for modal and formik
                         setSubmitting(true);
@@ -463,15 +381,15 @@ const UserDashboard = () => {
                                 body: { name: values.name }
                             }).unwrap();
 
-                            modalInstance.hide();
+                            modalInstanceCb.hide();
                         } catch (e) {
                             // TODO: Show Error inside Modal if any occurs
                             console.log('e', e);
                         } finally {
                             setIsModalSubmitting(false);
-                            laddaBtnInstance.stop();
-                            modalInstance._config.backdrop = true;
-                            modalInstance._config.keyboard = true;
+                            laddaStartStopCb?.stopLoading();
+                            modalInstanceCb._config.backdrop = true;
+                            modalInstanceCb._config.keyboard = true;
                         }
                     }}
                 >
@@ -492,17 +410,12 @@ const UserDashboard = () => {
                                     name={getPropertyNameAsString(formFieldsAndValues, formFieldsAndValues.name)}
                                     component="div"
                                 />
-                                <Button
-                                    type="submit"
-                                    variant={BUTTON_VARIANT.BTN_PRIMARY}
-                                    id="update-upload-test"
+                                <LaddaButton
                                     disabled={isSubmitting}
-                                    additionalClassNames="ladda-button"
-                                    ref={$laddaBtnRef}
-                                    additionalProps={{ 'data-style': 'expand-right' }}
+                                    onStartStopLoadingCb={ladda => setLaddaStartStopCb(ladda)}
                                 >
                                     Update
-                                </Button>
+                                </LaddaButton>
                                 <Button id="delete-upload" disabled={isSubmitting} variant={BUTTON_VARIANT.BTN_DANGER}>
                                     Löschen
                                 </Button>
@@ -515,4 +428,4 @@ const UserDashboard = () => {
     );
 };
 
-export default memo(UserDashboard);
+export default memo(UserDashboardPage);

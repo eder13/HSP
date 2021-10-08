@@ -17,8 +17,8 @@ const ShowCase = ({ isMobileNavDisplayed }) => {
             <div className="d-flex justify-content-center">
                 <Image className={imageStyles} image={image} alt="File Upload" />
             </div>
-            <h1 className="display-5">Teilen von Unterrichtsmaterialien leicht gemacht.</h1>
-            <p className="lead">Melde dich an. </p>
+            <h1 className="display-5">Sharing and uploading data has never been so easy-</h1>
+            <p className="lead">Login to join the community and get access to thousands of files!</p>
             {isMobileNavDisplayed && (
                 <LoginLogoutButton
                     isLoggedIn={isLoggedIn}

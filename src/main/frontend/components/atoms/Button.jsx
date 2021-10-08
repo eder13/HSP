@@ -17,6 +17,7 @@ const Button = forwardRef((props, ref) => {
         additionalStyles,
         additionalProps,
         onClick = () => {},
+        onSubmit = () => {},
         onMouseOver = () => {},
         onMouseOut = () => {}
     } = props;
@@ -33,6 +34,7 @@ const Button = forwardRef((props, ref) => {
         <button
             ref={ref}
             onClick={onClick}
+            onSubmit={onSubmit}
             onMouseOver={onMouseOver}
             onMouseOut={onMouseOut}
             id={id}
@@ -58,6 +60,7 @@ Button.propTypes = {
     additionalStyles: PropTypes.object,
     additionalProps: PropTypes.object,
     onClick: PropTypes.func,
+    onSubmit: PropTypes.func,
     onMouseOver: PropTypes.func,
     onMouseOut: PropTypes.func
 };

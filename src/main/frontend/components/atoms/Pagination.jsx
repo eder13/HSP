@@ -1,12 +1,14 @@
-import React, { forwardRef } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import CLIENT_CONSTANTS from '../../constants/clientConstants';
 import cns from '../util/cssClassHelper';
 import { scrollToElement } from '../util/scroll';
 import { getPageNumberFromURL } from './paginationUtils';
 
-const Pagination = forwardRef((props, ref) => {
+const Pagination = props => {
     const { gettingDataCallbackArray, currentSelection, prev, next, first, last, setPage } = props;
+
+    /// TODO: replace this with query-string library -> removes getPageNumberFormURL
     const prevPageNumber = getPageNumberFromURL(prev);
     const nextPageNumber = getPageNumberFromURL(next);
     const firstPageNumber = getPageNumberFromURL(first);
@@ -28,7 +30,6 @@ const Pagination = forwardRef((props, ref) => {
                                     }
                                     e.preventDefault();
                                     setPage(prevPageNumber);
-                                    scrollToElement(ref.current);
                                     e.target.blur();
                                 }}
                                 className="page-link"
@@ -43,7 +44,6 @@ const Pagination = forwardRef((props, ref) => {
                                     onClick={e => {
                                         e.preventDefault();
                                         callback();
-                                        scrollToElement(ref.current);
                                         e.target.blur();
                                     }}
                                     className="page-link"
@@ -61,7 +61,6 @@ const Pagination = forwardRef((props, ref) => {
                                     }
                                     e.preventDefault();
                                     setPage(nextPageNumber);
-                                    scrollToElement(ref.current);
                                     e.target.blur();
                                 }}
                                 className="page-link"
@@ -75,7 +74,7 @@ const Pagination = forwardRef((props, ref) => {
             </ul>
         </div>
     );
-});
+};
 
 Pagination.propTypes = {
     gettingDataCallbackArray: PropTypes.array,

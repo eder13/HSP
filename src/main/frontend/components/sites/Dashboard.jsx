@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Reaptcha from 'reaptcha';
 
+/// TODO: Remove this, this is just for demonstration purposes
+
 const Dashboard = () => {
     const [isSelected, setIsSelected] = useState(false);
     const [isValidated, setIsValidated] = useState(false);
