@@ -1,5 +1,5 @@
 import React, { useState, memo } from 'react';
-import useInitialDashboardData from '../../hooks/useInitialDashboarData';
+import useInitialDashboardData from '../../hooks/useInitialDashboardData';
 import { usePatchUserUploadsByIdMutation } from '../../middleware/api';
 import Table from '../atoms/Table';
 import Pagination from '../atoms/Pagination';
