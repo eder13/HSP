@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import cssClassNamesHelper from '../../util/cssClassHelper';
+import cssClassNamesHelper from '../../utils/cssClassNamesHelper';
 import styles from './LoginLogoutButton.module.css';
-import Button from '../../atoms/Button';
+import Button from '../../atoms/button/Button';
 import GoogleButton from '../../atoms/google-sign-button/GoogleButton';
-import { BUTTON_VARIANT_LIGHT } from '../../../constants/buttonVariants';
-import BUTTON_SIZE from '../../../constants/buttonSize';
+import { BUTTON_VARIANT_LIGHT } from '../../atoms/button/buttonVariants';
+import BUTTON_SIZE from '../../atoms/button/buttonSize';
 import Icon from '../../atoms/icons/Icon';
 import ICONTYPES from '../../atoms/icons/iconTypes';
 import ICONSIZE from '../../atoms/icons/iconSize';

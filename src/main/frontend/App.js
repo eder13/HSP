@@ -1,47 +1,49 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import useWindowResizeListener from './hooks/useWindowResizeListener';
 import PropTypes from 'prop-types';
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query/react';
 import { Provider } from 'react-redux';
 import { api } from './middleware/api';
 import { actionSetUser } from './actions/authActions';
-import { actionSetBrowserWidth } from './actions/clientActions';
 import userData from './reducers/authReducer';
 import clientSystemInfo from './reducers/clientReducer';
+import modal from './reducers/modalReducer';
 import AppRouter from './components/routers/AppRouter';
-import 'bootswatch/dist/materia/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.min.js';
-import _ from 'lodash';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.min.js'; // TODO: Only Import JS Bootstrap that's needed
 
 const store = configureStore({
     reducer: {
         [api.reducerPath]: api.reducer,
         user: userData,
-        clientSystemInfo
+        clientSystemInfo,
+        modal
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware().concat(api.middleware)
 });
 
 setupListeners(store.dispatch);
 
-const captureBrowserWidth = () => {
-    const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    store.dispatch(actionSetBrowserWidth(width));
-};
+const App = props => {
+    /**
+     * Props
+     */
+    const { id, user, isLoggedIn } = props;
 
-const App = ({ id, user, isLoggedIn }) => {
+    /**
+     * Actions
+     */
     store.dispatch(actionSetUser(id, user, isLoggedIn));
 
-    useEffect(() => {
-        captureBrowserWidth();
-        const debouncedCaptureBrowserWidth = _.debounce(captureBrowserWidth, 200);
+    /**
+     * Hooks
+     */
+    useWindowResizeListener(store.dispatch);
 
-        window.addEventListener('resize', debouncedCaptureBrowserWidth);
-        return () => {
-            window.removeEventListener('resize', debouncedCaptureBrowserWidth);
-        };
-    }, []);
-
+    /**
+     * Render
+     */
     return (
         <Provider store={store}>
             <AppRouter />

@@ -1,8 +1,8 @@
 import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
-import { BUTTON_VARIANT } from '../../constants/buttonVariants';
-import cssClassNamesHelper from '../util/cssClassHelper';
-import BUTTON_SIZE from '../../constants/buttonSize';
+import { BUTTON_VARIANT } from './buttonVariants';
+import cssClassNamesHelper from '../../utils/cssClassNamesHelper';
+import BUTTON_SIZE from './buttonSize';
 
 const Button = forwardRef((props, ref) => {
     const {

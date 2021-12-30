@@ -1,0 +1,24 @@
+.title {
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+}
+
+.table {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    overflow: hidden;
+}
+
+.tableHeaderTr {
+    color: white;
+    background-color: #2196f3;
+    border-bottom: 3px solid #333;
+}
+
+.tableHeaderTd {
+    vertical-align: 'middle';
+}
+
+.tableHeaderTdInner {
+    border-bottom: '1px dotted white';
+}

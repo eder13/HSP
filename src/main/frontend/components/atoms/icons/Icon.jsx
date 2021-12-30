@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ICONTYPES from './iconTypes';
-import cssClassNamesHelper from '../../util/cssClassHelper';
+import cssClassNamesHelper from '../../utils/cssClassNamesHelper';
 import 'css.gg/icons/css/log-in.css';
 import 'css.gg/icons/css/log-out.css';
 import 'css.gg/icons/css/software-download.css';

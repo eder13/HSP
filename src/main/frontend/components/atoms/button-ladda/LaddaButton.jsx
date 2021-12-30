@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import Button from './Button';
-import { BUTTON_VARIANT } from '../../constants/buttonVariants';
+import Button from '../button/Button';
+import { BUTTON_VARIANT } from '../button/buttonVariants';
 import 'ladda/dist/ladda-themeless.min.css';
-import useLaddaBtn from '../../hooks/useLaddaBtn';
+import useLaddaBtn from '../../../hooks/useLaddaBtn';
 
 const LaddaButton = props => {
     /**

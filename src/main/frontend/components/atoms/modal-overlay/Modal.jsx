@@ -1,10 +1,17 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Modal as ModalBS } from 'bootstrap';
 
-const Modal = ({ onRegisterModal, children, title, footer, disableClose = false }) => {
+const Modal = props => {
+    /**
+     * Props, Refs
+     */
+    const { onRegisterModal, children, title, footer, disableClose = false } = props;
     const $modalRef = useRef();
     const [modalInstance, setModalInstance] = useState(undefined);
 
+    /**
+     * Lifecycle Hooks
+     */
     useEffect(() => {
         if ($modalRef?.current) {
             const modalBS = new ModalBS($modalRef.current);
@@ -13,6 +20,9 @@ const Modal = ({ onRegisterModal, children, title, footer, disableClose = false 
         }
     }, []);
 
+    /**
+     * Render
+     */
     return (
         <div
             ref={$modalRef}

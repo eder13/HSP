@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import cssClassNamesHelper from '../util/cssClassHelper';
+import cssClassNamesHelper from '../../utils/cssClassNamesHelper';
 
 const Table = props => {
     const {
@@ -11,7 +11,8 @@ const Table = props => {
         tableFooterData,
         additionalStyles,
         trStyles,
-        skeleton = false
+        skeleton = false,
+        className = ''
     } = props;
 
     let tableBodyData = [];
@@ -43,6 +44,7 @@ const Table = props => {
     };
 
     const tableStyles = cssClassNamesHelper([
+        className,
         'table',
         'table-xl',
         !skeleton && 'table-hover',
@@ -59,11 +61,12 @@ const Table = props => {
 };
 
 Table.propTypes = {
-    tableRowsAmount: PropTypes.number,
-    tableCellsAmmount: PropTypes.number,
-    tableCellDataOfCorrespondingRowArray: PropTypes.array,
-    tableHeaderData: PropTypes.object,
+    tableHeaderData: PropTypes.object.isRequired,
+    tableRowsAmount: PropTypes.number.isRequired,
+    tableCellsAmmount: PropTypes.number.isRequired,
+    tableCellDataOfCorrespondingRowArray: PropTypes.array.isRequired,
     tableFooterData: PropTypes.object,
+    className: PropTypes.string,
     additionalStyles: PropTypes.object,
     trStyles: PropTypes.object,
     skeleton: PropTypes.bool

@@ -6,4 +6,4 @@
  * @param {*} type: person.age
  * @returns 'age'
  */
-export const getPropertyNameAsString = (obj, type) => Object.keys(obj).find(key => obj[key] === type);
+export const getPropertyAsString = (obj, type) => Object.keys(obj).find(key => obj[key] === type);

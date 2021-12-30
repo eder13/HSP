@@ -81,9 +81,9 @@ logging:
         #------------------------------------------------------------------------------
         # MySQL trace queries
         #
-        org:
-            hibernate:
-                SQL: debug
-                type:
-                descriptor:
-                    sql: trace
+        #org:
+        #    hibernate:
+        #        SQL: debug
+        #        type:
+        #        descriptor:
+        #            sql: trace

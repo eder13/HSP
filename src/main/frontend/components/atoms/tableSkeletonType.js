@@ -1,6 +1,0 @@
-const TABLE_SKELETON = {
-    UPLOADS: 'UPLOADS',
-    DOWNLOADS: 'DOWNLOADS'
-};
-
-export default TABLE_SKELETON;

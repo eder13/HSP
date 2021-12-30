@@ -20,4 +20,4 @@ export const BUTTON_VARIANT_LIGHT = {
     BTN_DANGER: 'btn btn-outline-danger',
     BTN_LIGHT: 'btn btn-outline-light',
     BTN_DARK: 'btn btn-outline-dark'
-}
+};

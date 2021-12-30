@@ -4,53 +4,24 @@ import { selectLoggedIn } from '../../../selectors/authSelector';
 import { Link, useHistory } from 'react-router-dom';
 import { selectIsMobileNavbar } from '../../../selectors/clientInfoSelector';
 import List from '../../atoms/List';
-import cssClassNamesHelper from '../../util/cssClassHelper';
-import Button from '../../atoms/Button';
+import cssClassNamesHelper from '../../utils/cssClassNamesHelper';
+import Button from '../../atoms/button/Button';
 import LoginLogoutButton from '../../molecules/login-logout-button/LoginLogoutButton';
-import { BUTTON_VARIANT } from '../../../constants/buttonVariants';
+import { BUTTON_VARIANT } from '../../atoms/button/buttonVariants';
 import ROUTES from '../../routers/Routes';
-import BUTTON_SIZE from '../../../constants/buttonSize';
+import BUTTON_SIZE from '../../atoms/button/buttonSize';
 import Cookies from 'js-cookie';
 import Icon from '../../atoms/icons/Icon';
 import ICONTYPES from '../../atoms/icons/iconTypes';
 import styles from './Navbar.module.css';
-
-const getLiContent = (isLoggedIn, isMobileNavbarActive) => {
-    const linkClasses = cssClassNamesHelper(['nav-link', 'mx-3', isMobileNavbarActive && 'text-center']);
-
-    const li1 = (
-        <Link className={`${linkClasses} active`} to="/">
-            {isLoggedIn ? 'Meine Uploads & Downloads' : 'Home'}
-            <span className="visually-hidden">(current)</span>
-        </Link>
-    );
-    const li2 = isLoggedIn ? (
-        <Link className={linkClasses} to="">
-            Alle Uploads
-        </Link>
-    ) : (
-        <a className={`${linkClasses}`} href="#">
-            Über x
-        </a>
-    );
-    const li3 = !isLoggedIn && (
-        <a className={`${linkClasses}`} href="#">
-            FAQ
-        </a>
-    );
-
-    if (li3) {
-        return [li1, li2, li3];
-    } else {
-        return [li1, li2];
-    }
-};
+import { navbarListItems } from './navbarUtils';
 
 const Navbar = () => {
+    /**
+     * Variables, Selectors, State
+     */
     const history = useHistory();
-
     const [navbarCollapsed, setNavbarCollapsed] = useState(false);
-
     const isLoggedIn = useSelector(selectLoggedIn);
     const isMobileNavbarActive = useSelector(selectIsMobileNavbar);
 
@@ -61,6 +32,9 @@ const Navbar = () => {
         'aria-label': 'Toggle navigation'
     };
 
+    /**
+     * Function Callbacks
+     */
     const onLogout = async () => {
         const req = await fetch('/logout', { method: 'post', headers: { 'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN') } });
         await req.ok;
@@ -71,10 +45,12 @@ const Navbar = () => {
         history.push(ROUTES.UPLOAD_FILE);
     };
 
+    /**
+     * Render
+     */
     const buttonTogglerClassNames = cssClassNamesHelper([
         !navbarCollapsed ? 'navbar-toggler' : 'navbar-toggler collapse show'
     ]);
-
     const collapsedDivClassNames = cssClassNamesHelper([
         !navbarCollapsed ? 'collapse navbar-collapse' : 'navbar-collapse collapse show'
     ]);
@@ -127,7 +103,7 @@ const Navbar = () => {
                     >
                         <List
                             ulClassName={`navbar-nav me-auto ${isMobileNavbarActive && styles.fadeIn}`}
-                            listItemsContent={getLiContent(isLoggedIn, isMobileNavbarActive)}
+                            listItemsContent={navbarListItems(isLoggedIn, isMobileNavbarActive)}
                             liClassName="nav-item"
                         />
                         <LoginLogoutButton

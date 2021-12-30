@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CLIENT_CONSTANTS from '../../constants/clientConstants';
-import cns from '../util/cssClassHelper';
-import { scrollToElement } from '../util/scroll';
+import CLIENT_CONSTANTS from '../../../constants/clientConstants';
+import cns from '../../utils/cssClassNamesHelper';
+import { scrollToElement } from '../../utils/scroll';
 import { getPageNumberFromURL } from './paginationUtils';
 
 const Pagination = props => {

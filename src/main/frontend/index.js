@@ -1,16 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
+import { AppContainer } from 'react-hot-loader'; // TODO PROD: Remove this import
 import App from './App';
 import axios from 'axios';
 
+/**
+ * First Paint and Authentication before
+ * Rendering React Components
+ */
 (async () => {
-    console.log(
-        '%cWant to contribute? Feel free to submit your Pull Requests! 👨‍💻',
-        'background-color: #333; padding: 0.3rem 1.5rem; font-size: 1.2em; line-height: 1.4em; color: white;'
-    );
-    console.log('https://github.com/eder13/HSP');
-
     let isLoggedIn = false;
     let user = '';
     let id = -1;
@@ -33,6 +31,7 @@ import axios from 'axios';
         }
         console.error('[auth]: user is not authenticated');
     } finally {
+        // TODO PROD: Remove the below code
         const render = App => {
             ReactDOM.render(
                 <AppContainer>
@@ -50,5 +49,15 @@ import axios from 'axios';
                 render(NextRootContainer);
             });
         }
+
+        // TODO PROD: Uncomment the below Code
+        /*
+        ReactDOM.render(
+            <React.StrictMode>
+                <App />
+            </React.StrictMode>,
+            document.getElementById('root')
+        );
+        */
     }
 })();
