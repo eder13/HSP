@@ -52,9 +52,9 @@ const App = props => {
 };
 
 App.propTypes = {
-    id: PropTypes.number,
-    user: PropTypes.string,
-    isLoggedIn: PropTypes.bool
+    id: PropTypes.number.isRequired,
+    user: PropTypes.string.isRequired,
+    isLoggedIn: PropTypes.bool.isRequired
 };
 
 export default App;

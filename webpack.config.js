@@ -4,6 +4,10 @@ var dotenv = require('dotenv').config({ path: __dirname + '/.env' });
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
+// TODO: Add the compression-webpack-plugin to use "gzip" for bundling
+// https://v4.webpack.js.org/plugins/compression-webpack-plugin/
+// FIXME: In General have a look for other plugins on the v4.webpack.js url -> maybe find something
+
 module.exports = {
     node: {
         fs: 'empty'
@@ -93,11 +97,6 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader', 'postcss-loader']
-            },
-            {
-                exclude: /(node_modules)/,
-                test: /\.css$/,
-                use: ['postcss-loader']
             },
             {
                 test: /\.(png|jpg|jpe?g|gif|svg)$/,

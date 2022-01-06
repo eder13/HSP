@@ -1,8 +1,12 @@
 .title {
     text-align: center;
-    margin-left: 2rem;
-    margin-right: 2rem;
     margin-top: 4rem;
+    margin-bottom: 4rem;
+}
+
+.username {
+    color: rgb(255, 112, 75); /* primary color */
+    font-weight: bold;
 }
 
 .downloadLinkButton {

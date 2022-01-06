@@ -40,6 +40,10 @@ const UserDashboardPage = () => {
     const isModalActive = useSelector(selectModalActive);
 
     /**
+     * Variables
+     */
+
+    /**
      * Hooks
      */ /// TODO: Filter out Errors -> Message under Navbar + refresh site button (const rerender = useForceRerender -- onClick Button: rerender())
     const { isUserDataLoading, error, data } = useInitialDashboardData(userId);
@@ -74,11 +78,39 @@ const UserDashboardPage = () => {
     const initialLoad = isUserDataLoading;
     const joinedDate = parseSQLDateToJavaScript(data?.userData?.joined);
 
+    console.log('##### environment', process.env.NODE_ENV);
+
+    return (
+        <main style={{ height: '100vh', backgroundColor: 'rgb(242, 244, 254)' }} className="container-fluid pt-3">
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="col-8">
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-7">
+                                    <h3 className={styles.username}>Hallo, {username.split('@')[0]} 👋</h3>
+                                </div>
+                                <div className="col">button</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-4">
+                        <Image
+                            className="mx-auto img-fluid img-circle d-block mb-3"
+                            image={'//placehold.it/150'}
+                            alt="profile picture"
+                        />
+                    </div>
+                </div>
+            </div>
+        </main>
+    );
+
     /**
      * Render
      */
     return (
-        <main>
+        <main className="container">
             <h1 className={styles.title}>Meine Uploads & Downloads</h1>
             <div className="container mt-5">
                 <div className="row my-2">

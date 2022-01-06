@@ -1,0 +1,134 @@
+@import './../../../base.css';
+
+.dropdown {
+    position: relative;
+    width: 70px;
+}
+
+.dropdown .dropdownTitle {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    z-index: 5;
+    left: 20px;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.dropdown .hamburgerWrapper {
+    position: relative;
+    background-color: rgb(184, 198, 199);
+
+    @media screen and (--SM) {
+        background-color: red;
+    }
+
+    width: 80px;
+    height: 50px;
+    border-radius: 26% 26% 26% 26% / 50% 50% 50% 50%;
+}
+
+.dropdown .hamburger {
+    position: relative;
+    top: 48%;
+    left: 28px;
+    width: 24px;
+    height: 3px;
+    background-color: #000;
+    z-index: 2;
+    transition: transform 0.2s ease-in;
+    border-radius: 8px;
+}
+
+.dropdown .hamburger::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 0;
+    width: 24px;
+    height: 3px;
+    background-color: #000;
+    z-index: 2;
+    border-radius: 8px;
+}
+
+.dropdown .hamburger::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 0;
+    width: 24px;
+    height: 3px;
+    background-color: #000;
+    z-index: 2;
+    border-radius: 8px;
+}
+
+.dropdown .dropdownTitle:checked + .hamburger {
+    transform: rotate(135deg);
+}
+
+.dropdown .dropdownTitle:checked + .hamburger::after,
+.dropdown .dropdownTitle:checked + .hamburger::before {
+    content: '';
+    top: 0;
+    transform: rotate(90deg);
+}
+
+.dropdown .dropdownTitle::after {
+    content: '';
+    border: 0.35rem solid transparent;
+    border-top-color: rgba(#fff, 0.45);
+    margin-left: 0.25em;
+    transform: translateY(0.15em);
+}
+
+.dropdown .dropdownMenu {
+    position: absolute;
+    min-width: 15ch;
+    top: calc(100% + 0.25rem);
+    display: none;
+    padding: 0.5em 0;
+    background-color: #f4f4f4;
+    border-radius: 4px;
+    box-shadow: 0 0.15em 0.25em rgba(black, 0.25);
+    z-index: 99999999;
+}
+
+.dropdown .dropdownMenu a {
+    display: block;
+    padding: 0.5em;
+    color: black;
+}
+
+.dropdown:focus-within .dropdownTitle {
+    border-top-color: pink;
+}
+
+.dropdown:focus-within .dropdownMenu {
+    opacity: 1;
+    display: block;
+}
+
+.dropdown:focus-within .dropdownMenu a {
+    opacity: 1;
+}
+
+.dropdown ul {
+    grid-auto-flow: column;
+}
+
+.dropdown ul > li {
+    margin: 0;
+    list-style-type: none;
+    outline: 1px solid #333;
+}
+
+.dropdown ul > li a {
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+    color: #fff;
+    font-size: 1.125rem;
+    padding: 100%;
+}

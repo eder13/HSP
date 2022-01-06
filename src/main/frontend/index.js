@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { AppContainer } from 'react-hot-loader'; // TODO PROD: Remove this import
 import App from './App';
 import axios from 'axios';
 
@@ -31,33 +30,37 @@ import axios from 'axios';
         }
         console.error('[auth]: user is not authenticated');
     } finally {
-        // TODO PROD: Remove the below code
-        const render = App => {
+        if (process.env.NODE_ENV === 'development') {
+            const hotModule = await import('react-hot-loader');
+            const { AppContainer } = hotModule;
+            const bootStrapIndicatorModule = await import('./components/utils/developmentUtils');
+            const { bootstrapBreakpointIndicator } = bootStrapIndicatorModule;
+
+            bootstrapBreakpointIndicator();
+            const render = App => {
+                ReactDOM.render(
+                    <AppContainer>
+                        <App id={id} user={user} isLoggedIn={isLoggedIn} />
+                    </AppContainer>,
+                    document.getElementById('root')
+                );
+            };
+
+            render(App);
+
+            if (module.hot) {
+                module.hot.accept('./App.js', () => {
+                    const NextRootContainer = require('./App').default;
+                    render(NextRootContainer);
+                });
+            }
+        } else {
             ReactDOM.render(
-                <AppContainer>
+                <React.StrictMode>
                     <App id={id} user={user} isLoggedIn={isLoggedIn} />
-                </AppContainer>,
+                </React.StrictMode>,
                 document.getElementById('root')
             );
-        };
-
-        render(App);
-
-        if (module.hot) {
-            module.hot.accept('./App.js', () => {
-                const NextRootContainer = require('./App').default;
-                render(NextRootContainer);
-            });
         }
-
-        // TODO PROD: Uncomment the below Code
-        /*
-        ReactDOM.render(
-            <React.StrictMode>
-                <App />
-            </React.StrictMode>,
-            document.getElementById('root')
-        );
-        */
     }
 })();

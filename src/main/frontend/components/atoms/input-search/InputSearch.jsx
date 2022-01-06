@@ -21,7 +21,7 @@ const InputSearch = props => {
         <div className="input-group mb-3">
             <input type="text" className="form-control form-control-sm" placeholder={inputPlaceholder} />
             <Button buttonSize={BUTTON_SIZE.NORMAL} variant={BUTTON_VARIANT.BTN_SECONDARY} additionalStyles={{}}>
-                <Icon iconType={ICONTYPES.SEARCH} size={ICONSIZE.SIZE_1_5X} />
+                <Icon iconType={ICONTYPES.SEARCH} size={ICONSIZE.SIZE_0_75X} />
             </Button>
         </div>
     );

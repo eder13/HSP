@@ -39,7 +39,7 @@
         "reselect": "^4.1.5"
     },
     "scripts": {
-        "start": "webpack-dev-server --mode development --hot"
+        "start": "webpack serve"
     },
     "devDependencies": {
         "@babel/core": "^7.16.5",
@@ -66,14 +66,17 @@
         "imagemin-pngquant": "^9.0.2",
         "imagemin-svgo": "^9.0.0",
         "img-loader": "^3.0.2",
+        "postcss-custom-media": "^8.0.0",
+        "postcss-import": "^14.0.2",
         "postcss-loader": "^4.3.0",
+        "postcss-nested": "^5.0.6",
         "prettier": "^2.5.1",
         "react-hot-loader": "^4.13.0",
         "style-loader": "^2.0.0",
         "svgo": "^2.8.0",
         "terser-webpack-plugin": "^4.2.3",
-        "webpack": "^4.16.1",
-        "webpack-cli": "^3.0.8",
-        "webpack-dev-server": "^3.11.2"
+        "webpack": "^4.46.0",
+        "webpack-cli": "^4.9.1",
+        "webpack-dev-server": "^3.11.3"
     }
 }
