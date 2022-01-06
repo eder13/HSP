@@ -31,7 +31,7 @@ const DownloadsTable = () => {
     ) : (
         <>
             <h2 className={styles.title}>Meine Downloads {'⬇️'}</h2>
-            <InputSearch inputPlaceholder="Durchsuche Downloads ..." />
+            <InputSearch placeholder="Durchsuche Downloads ..." />
             <>
                 <Table
                     tableHeaderData={getDownloadTableHeaderData()}

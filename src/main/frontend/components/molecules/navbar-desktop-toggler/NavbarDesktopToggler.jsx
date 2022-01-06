@@ -1,7 +1,18 @@
 import React, { useEffect, useRef } from 'react';
 import styles from './NavbarDesktopToggler.module.css';
+import LoginLogoutButton from '../login-logout-button/LoginLogoutButton';
+import { useSelector } from 'react-redux';
+import { selectLoggedIn } from '../../../selectors/authSelector';
+import Cookies from 'js-cookie';
 
 const NavbarDesktopToggler = () => {
+    // TODO: onLogout for NavbarDesktops dropdown
+    const onLogout = async () => {
+        const req = await fetch('/logout', { method: 'post', headers: { 'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN') } });
+        await req.ok;
+        window.location.href = process.env.DOMAIN_URL;
+    };
+
     /**
      * State, Refs, Callbacks
      */
@@ -13,6 +24,11 @@ const NavbarDesktopToggler = () => {
             document.activeElement.blur();
         }
     };
+
+    /**
+     * Selectors
+     */
+    const isLoggedIn = useSelector(selectLoggedIn);
 
     /**
      * Hooks
@@ -40,9 +56,9 @@ const NavbarDesktopToggler = () => {
      * Render
      */
     return (
-        <div class={styles.dropdown}>
+        <div className={styles.dropdown}>
             <div className={styles.hamburgerWrapper}>
-                <input type="checkbox" class={styles.dropdownTitle} ref={checkBoxRef} onClick={onCheckboxClick} />
+                <input type="checkbox" className={styles.dropdownTitle} ref={checkBoxRef} onClick={onCheckboxClick} />
                 <div className={styles.hamburger}></div>
                 <div className={styles.hamburgerCircle}></div>
             </div>
@@ -57,9 +73,11 @@ const NavbarDesktopToggler = () => {
                 <li>
                     <a href="#">Chocolate</a>
                 </li>
-                <li>
-                    <a href="#">Bonbons</a>
-                </li>
+                {isLoggedIn && (
+                    <li>
+                        <LoginLogoutButton onLogout={onLogout} isLoggedIn={isLoggedIn} />
+                    </li>
+                )}
             </ul>
         </div>
     );

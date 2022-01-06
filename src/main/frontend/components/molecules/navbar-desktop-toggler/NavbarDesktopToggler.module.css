@@ -1,3 +1,6 @@
+/**
+ * Breakpoints, Colors
+ */
 @import './../../../base.css';
 
 .dropdown {
@@ -18,11 +21,6 @@
 .dropdown .hamburgerWrapper {
     position: relative;
     background-color: rgb(184, 198, 199);
-
-    @media screen and (--SM) {
-        background-color: red;
-    }
-
     width: 80px;
     height: 50px;
     border-radius: 26% 26% 26% 26% / 50% 50% 50% 50%;
@@ -87,6 +85,8 @@
     position: absolute;
     min-width: 15ch;
     top: calc(100% + 0.25rem);
+    left: -80px;
+
     display: none;
     padding: 0.5em 0;
     background-color: #f4f4f4;

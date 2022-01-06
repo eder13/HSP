@@ -56,7 +56,7 @@ const LoginLogoutButton = ({ isLoggedIn, isMobileNavbarActive, onLogout, contain
 };
 
 LoginLogoutButton.propTypes = {
-    isLoggedIn: PropTypes.bool,
+    isLoggedIn: PropTypes.bool.isRequired,
     isMobileNavbarActive: PropTypes.bool,
     onLogout: PropTypes.func
 };

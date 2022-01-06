@@ -73,7 +73,7 @@ const UploadsTable = () => {
             ) : (
                 <>
                     <h2 className={styles.title}>Meine Uploads {'⬆️'}</h2>
-                    <InputSearch inputPlaceholder="Durchsuche Uploads ..." />
+                    <InputSearch placeholder="Durchsuche Uploads ..." />
 
                     <>
                         <Table

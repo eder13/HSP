@@ -6,54 +6,48 @@ import { useSelector } from 'react-redux';
 import InputSearch from '../../atoms/input-search/InputSearch';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import styles from './NavbarDesktop.module.css';
 
 const NavbarDesktop = () => {
     const isLoggedIn = useSelector(selectLoggedIn);
 
-    const onLogout = async () => {
-        const req = await fetch('/logout', { method: 'post', headers: { 'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN') } });
-        await req.ok;
-        window.location.href = process.env.DOMAIN_URL;
-    };
+    // TODO: Define a new component named <Navbar> that combines mobile and desktop navbar
+    // if isSM or isXS -> Mobile Navbar show, else show desktop Navbar
 
-    // TODO: Transform this into navbar component of bootstrap for easy alignment
-    // https://getbootstrap.com/docs/5.0/components/navbar/
     return (
-        <div className="container-fluid pt-4">
-            <div className="row">
-                <div className="col-2">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col">
+        <>
+            <nav className="navbar">
+                <div className="container-fluid">
+                    {/* TODO: Place Logo in extra component */}
+                    <Link className="navbar-brand pt-4" to="/">
+                        <div className="ms-2 d-flex flex-column justify-content-center">
+                            <h3 className={styles.logo}>GeWe</h3>
+                            <p className={`mb-0 ${styles.subText}`}>Geschichtewerkstatt Uni Graz</p>
+                        </div>
+                    </Link>
+                    <div className="navbar-header navbar-right pull-right me-5">
+                        <ul
+                            style={isLoggedIn ? {} : { width: '300px' }}
+                            className="nav navbar-nav navbar-right d-flex flex-row align-items-center justify-content-between"
+                        >
+                            <li style={{ marginRight: '-5rem' }}>
+                                {isLoggedIn ? (
+                                    <InputSearch
+                                        placeholder="Suche ..."
+                                        classNames={`d-flex mb-0 ${styles.searchFormInput}`}
+                                    />
+                                ) : (
+                                    <LoginLogoutButton isLoggedIn={false} />
+                                )}
+                            </li>
+                            <li>
                                 <NavbarDesktopToggler />
-                            </div>
-                            <div className="col">
-                                <div></div>
-                            </div>
-                        </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                <div className="col-10">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-10">
-                                <div class="row">
-                                    <div class="col">
-                                        <Link to="">Neuer Upload</Link>
-                                    </div>
-                                    <div class="col">
-                                        <InputSearch inputPlaceholder="Suche nach Unterrichtsmaterialien ..." />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-2">
-                                <LoginLogoutButton isLoggedIn={isLoggedIn} onLogout={onLogout} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            </nav>
+        </>
     );
 };
 

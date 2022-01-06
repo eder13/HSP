@@ -4,7 +4,7 @@
     height: 42px;
     background-color: #4285f4;
     border-radius: 2px;
-    box-shadow: 0 3px 4px 0 rgba(0,0,0,.25);
+    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.25);
     padding: 0;
     margin: 0;
     cursor: pointer;
@@ -18,7 +18,7 @@
 }
 
 .loginContainer:active {
-    background: #1669F2;
+    background: #1669f2;
 }
 
 .loginGoogleIconWrapper {
@@ -44,15 +44,14 @@
     justify-content: center;
     align-items: center;
     height: 100%;
-    width: 100%; 
-    margin: 0; 
-
+    width: 100%;
+    margin: 0;
 }
 
 .loginText {
-    font-family: Roboto, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-family: Roboto, -apple-system, system-ui, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     color: white;
-    font-size: 0.9rem;
+    font-size: 0.86rem;
     letter-spacing: 0.2px;
     font-weight: 400;
     margin-bottom: 0;

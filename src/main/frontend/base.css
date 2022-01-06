@@ -7,6 +7,15 @@
     @custom-media --XL (min-width: 1200px) and (max-width: 1399px);
     @custom-media --XXL (min-width: 1400px);
 
+    /**
+     * Example usage Media queries
+     */
+    /*
+    @media screen and (--SM) {
+        background-color: red;
+    }
+    */
+
     /* Colors */
     /* TODO: Specify Colors of the Project */
 }

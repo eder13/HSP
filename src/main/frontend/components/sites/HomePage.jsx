@@ -8,11 +8,13 @@ const HomePage = () => {
 
     const renderHomepage = () => {
         return (
-            <main className="container">
-                <ShowCase isMobileNavDisplayed={isMobileNavDisplayed} />
-                {/* TODO: Über die App */}
-                {/* TODO: FAQ with accordions */}
-                {/* Implement this highlight Nav link effect via that jQuery script */}
+            <main style={{ backgroundColor: 'rgb(242, 244, 254)' }}>
+                <div className="container">
+                    <ShowCase isMobileNavDisplayed={isMobileNavDisplayed} />
+                    {/* TODO: Über die App */}
+                    {/* TODO: FAQ with accordions */}
+                    {/* Implement this highlight Nav link effect via that jQuery script */}
+                </div>
             </main>
         );
     };
