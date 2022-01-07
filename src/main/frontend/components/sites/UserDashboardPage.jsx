@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { selectUser, selectUserId } from '../../selectors/authSelector';
 import Image from '../atoms/image/Image';
 import cssClassNamesHelper from '../utils/cssClassNamesHelper';
-import { selectIsMobile } from '../../selectors/clientInfoSelector';
+import { selectIsMediaXS } from '../../selectors/clientInfoSelector';
 import Icon from '../atoms/icons/Icon';
 import ICONTYPES from '../atoms/icons/iconTypes';
 import ICONSIZE from '../atoms/icons/iconSize';
@@ -35,7 +35,7 @@ const UserDashboardPage = () => {
     const [laddaStartStopCb, setLaddaStartStopCb] = useState(undefined);
     const username = useSelector(selectUser);
     const userId = useSelector(selectUserId);
-    const isMobile = useSelector(selectIsMobile);
+    const isMobile = useSelector(selectIsMediaXS);
 
     const isModalActive = useSelector(selectModalActive);
 

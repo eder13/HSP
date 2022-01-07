@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import styles from './NavbarDesktopToggler.module.css';
-import LoginLogoutButton from '../login-logout-button/LoginLogoutButton';
+import LoginLogoutButton from '../../login-logout-button/LoginLogoutButton';
 import { useSelector } from 'react-redux';
-import { selectLoggedIn } from '../../../selectors/authSelector';
+import { selectLoggedIn } from '../../../../selectors/authSelector';
 import Cookies from 'js-cookie';
 
 const NavbarDesktopToggler = () => {

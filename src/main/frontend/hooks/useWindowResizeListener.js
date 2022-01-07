@@ -9,7 +9,11 @@ const captureBrowserWidth = dispatch => () => {
 
 const useWindowResizeListener = dispatch => {
     useEffect(() => {
-        captureBrowserWidth(dispatch);
+        dispatch(
+            actionSetBrowserWidth(
+                window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+            )
+        );
         const debouncedCaptureBrowserWidth = debounce(captureBrowserWidth(dispatch), 200);
 
         window.addEventListener('resize', debouncedCaptureBrowserWidth);

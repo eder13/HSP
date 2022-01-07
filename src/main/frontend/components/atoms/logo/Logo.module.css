@@ -2,13 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Mansalva&display=swap');
 
-.searchFormInput {
-    background-color: rgb(184, 198, 199); /* TODO: Define this color as $primary-light ? */
-    border-radius: 10% 10% 10% 10% / 85% 85% 85% 85%;
-    padding: 10px 6rem 10px 3rem;
-}
-
-/* TODO Move the Logo to own Atom */
 .logo {
     color: rgb(255, 112, 75);
     font-weight: 300;
@@ -16,6 +9,10 @@
     line-height: 0.65;
     font-family: 'Lobster', cursive;
     margin-left: 30px;
+    @media only screen and (--XS) {
+        font-size: 40px;
+        margin-left: 0;
+    }
 }
 
 .subText {
@@ -27,4 +24,9 @@
     text-transform: capitalize;
     font-style: italic;
     font-family: 'Mansalva', cursive;
+
+    @media only screen and (--XS) {
+        margin-left: 0;
+        font-size: 13px;
+    }
 }

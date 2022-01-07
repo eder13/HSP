@@ -1,0 +1,18 @@
+.mobileNavbar {
+    background-color: rgb(242, 244, 254) !important;
+    width: 100vw !important;
+    height: 70px !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    transition: transform 0.2s cubic-bezier(0.455, 0.03, 0.515, 0.955), visibility 0.2s !important;
+
+    border-radius: 60% 60% 10% 10% / 30% 30% 0% 0%;
+}
+
+/* For testing, remove afterwards */
+:root {
+    body {
+        height: 70000px;
+    }
+}

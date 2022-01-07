@@ -77,13 +77,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { selectIsMobile } from '../../selectors/clientInfoSelector';
+import { selectIsMediaXS } from '../../selectors/clientInfoSelector';
 import Table from './Table';
 import styles from './TableSkeleton.module.css';
 import TABLE_SKELETON from './tableSkeletonType';
 
 const TableSkeleton = ({ type }) => {
-    const isMobile = useSelector(selectIsMobile);
+    const isMobile = useSelector(selectIsMediaXS);
 
     switch (type) {
         case TABLE_SKELETON.UPLOADS:

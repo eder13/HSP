@@ -8,19 +8,17 @@ import { BUTTON_VARIANT, BUTTON_VARIANT_LIGHT } from '../../atoms/button/buttonV
 import BUTTON_SIZE from '../../atoms/button/buttonSize';
 import Icon from '../../atoms/icons/Icon';
 import ICONTYPES from '../../atoms/icons/iconTypes';
-import ICONSIZE from '../../atoms/icons/iconSize';
+import { useSelector } from 'react-redux';
+import { selectIsMediaXS } from '../../../selectors/clientInfoSelector';
 
 const LoginLogoutButton = ({ isLoggedIn, isMobileNavbarActive, onLogout, containerClassNames = '' }) => {
-    const containerStyles = cssClassNamesHelper([
-        containerClassNames,
-        'd-flex',
-        'justify-content-center',
-        isMobileNavbarActive && 'mt-2'
-    ]);
+    const containerStyles = cssClassNamesHelper([containerClassNames, 'd-flex', 'justify-content-center']);
     const logoutBtnStyles = cssClassNamesHelper(['my-2 px-4 my-sm-0', styles.logoutButton]);
 
+    const isMediaXS = useSelector(selectIsMediaXS);
+
     return (
-        <div className={containerStyles}>
+        <div className={containerStyles} style={isMediaXS ? { transform: 'scale(0.8)' } : {}}>
             {isLoggedIn ? (
                 <Button
                     className={logoutBtnStyles}
@@ -38,15 +36,6 @@ const LoginLogoutButton = ({ isLoggedIn, isMobileNavbarActive, onLogout, contain
                         style={{ display: 'flex', textDecoration: 'none', color: 'white' }}
                         href="/oauth2/authorization/google"
                     >
-                        {!isMobileNavbarActive && (
-                            <div className="align-items-center mx-2">
-                                <Icon
-                                    iconType={ICONTYPES.LOGIN}
-                                    size={ICONSIZE.SIZE_1_5X}
-                                    additionalStyles={{ marginTop: '12px', marginRight: '4px' }}
-                                />
-                            </div>
-                        )}
                         <GoogleButton />
                     </a>
                 </div>

@@ -1,14 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import HomePage from '../sites/HomePage';
-import Navbar from '../ui/navbar/Navbar';
+import Navbar from '../organisms/navbar/Navbar';
 import Dashboard from '../sites/Dashboard';
 import PrivateRoute from './PrivateRoute';
 import ROUTES from './Routes';
 import { useSelector } from 'react-redux';
 import { selectLoggedIn } from '../../selectors/authSelector';
 import UserDashboardPage from '../sites/UserDashboardPage';
-import NavbarDesktop from '../organisms/navbar-desktop/NavbarDesktop';
 
 const AppRouter = () => {
     /**
@@ -21,7 +20,7 @@ const AppRouter = () => {
      */
     return (
         <BrowserRouter>
-            <NavbarDesktop />
+            <Navbar />
             {/* Page Divider */}
             <div style={{ overflow: 'hidden', backgroundColor: 'rgb(242, 244, 254)' }}>
                 <svg
