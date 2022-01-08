@@ -1,13 +1,126 @@
 .mobileNavbar {
-    background-color: rgb(242, 244, 254) !important;
+    background-color: white !important;
+    /* background-color: #8ebdc6 !important; */ /* light blue */
+    /* background-color: #292627 !important; */ /* blackish */
+    /* background-color: #5d617c !important; */ /* blue-violetish */
     width: 100vw !important;
-    height: 70px !important;
+    height: 135px !important;
     position: fixed !important;
-    bottom: 0 !important;
+    bottom: -60px !important;
     left: 0 !important;
     transition: transform 0.2s cubic-bezier(0.455, 0.03, 0.515, 0.955), visibility 0.2s !important;
 
-    border-radius: 60% 60% 10% 10% / 30% 30% 0% 0%;
+    z-index: 9999;
+
+    /* border-radius: 60% 60% 10% 10% / 30% 30% 0% 0%; */
+    border-top: 1px solid rgba(33, 37, 41, 0.2);
+}
+
+.navbarElementsContainer {
+    padding-left: 0 !important;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    list-style-type: none !important;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* Basic Styles for Icons Colors */
+.profileIcon {
+    border-color: black;
+
+    &::after,
+    &::before {
+        border-color: black;
+    }
+}
+
+.uploadIcon {
+    border-color: black;
+
+    &::after {
+        border-color: black;
+    }
+    &::before {
+        background-color: black;
+    }
+}
+
+.infoIcon {
+    border-color: black;
+
+    &::after,
+    &::before {
+        background-color: black;
+    }
+}
+
+.homeIcon {
+    border-color: black;
+
+    &::before {
+        border-color: black;
+    }
+
+    &::after {
+        background-color: black;
+    }
+}
+
+.iconText {
+    font-size: 12px;
+    color: black;
+}
+
+/* Active Link class colorize Nav */
+.active {
+    .profileIcon {
+        border-color: rgb(255, 112, 75);
+
+        &::after,
+        &::before {
+            border-color: rgb(255, 112, 75);
+        }
+    }
+
+    .infoIcon {
+        border-color: rgb(255, 112, 75);
+
+        &::after,
+        &::before {
+            background-color: rgb(255, 112, 75);
+        }
+    }
+
+    .uploadIcon {
+        border-color: rgb(255, 112, 75);
+
+        &::after {
+            border-color: rgb(255, 112, 75);
+        }
+        &::before {
+            background-color: rgb(255, 112, 75);
+        }
+    }
+
+    .homeIcon {
+        border-color: rgb(255, 112, 75);
+
+        &::before {
+            border-color: rgb(255, 112, 75);
+        }
+
+        &::after {
+            background-color: rgb(255, 112, 75);
+        }
+    }
+
+    .iconText {
+        font-size: 12px;
+        color: rgb(255, 112, 75);
+    }
 }
 
 /* For testing, remove afterwards */

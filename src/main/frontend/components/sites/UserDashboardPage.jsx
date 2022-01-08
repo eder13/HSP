@@ -83,6 +83,10 @@ const UserDashboardPage = () => {
     return (
         <main style={{ height: '100vh', backgroundColor: 'rgb(242, 244, 254)' }} className="container-fluid pt-3">
             <div className="container-fluid">
+                <h1 className="mb-4">Mein Account</h1>
+
+                <h3 className={styles.username}>Hallo, {username.split('@')[0]} 👋</h3>
+
                 <div className="row">
                     <div className="col-8">
                         <div className="container">

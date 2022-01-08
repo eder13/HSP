@@ -10,10 +10,11 @@ import {
 } from '../../../selectors/clientInfoSelector';
 import NavbarDesktop from '../../molecules/navbar-desktop/NavbarDesktop';
 import NavbarMobile from '../../molecules/navbar-mobile/NavbarMobile';
+import Cookies from 'js-cookie';
 
 const Navbar = () => {
     /**
-     * Selectors
+     * Selectors, Variables
      */
     const isMediaXS = useSelector(selectIsMediaXS);
     const isMediaSM = useSelector(selectIsMediaSM);
@@ -21,14 +22,23 @@ const Navbar = () => {
     const isMediaLG = useSelector(selectIsMediaLG);
     const isMediaXL = useSelector(selectIsMediaXL);
     const isMediaXXL = useSelector(selectIsMediaXXL);
-
     const isMobileView = isMediaXS || isMediaSM;
     const isDesktopView = isMediaMD || isMediaLG || isMediaXL || isMediaXXL;
 
+    /**
+     * Callback Functions
+     */
+    // TODO: onLogout for NavbarDesktops dropdown
+    const onLogout = async () => {
+        const req = await fetch('/logout', { method: 'post', headers: { 'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN') } });
+        await req.ok;
+        window.location.href = process.env.DOMAIN_URL;
+    };
+
     if (isMobileView) {
-        return <NavbarMobile />;
+        return <NavbarMobile onLogout={onLogout} />;
     } else if (isDesktopView) {
-        return <NavbarDesktop />;
+        return <NavbarDesktop onLogout={onLogout} />;
     } else {
         return null;
     }

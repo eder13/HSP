@@ -3,15 +3,14 @@ import styles from './NavbarDesktopToggler.module.css';
 import LoginLogoutButton from '../../login-logout-button/LoginLogoutButton';
 import { useSelector } from 'react-redux';
 import { selectLoggedIn } from '../../../../selectors/authSelector';
-import Cookies from 'js-cookie';
+import { NavLink } from 'react-router-dom';
+import ROUTES from '../../../routers/Routes';
 
-const NavbarDesktopToggler = () => {
-    // TODO: onLogout for NavbarDesktops dropdown
-    const onLogout = async () => {
-        const req = await fetch('/logout', { method: 'post', headers: { 'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN') } });
-        await req.ok;
-        window.location.href = process.env.DOMAIN_URL;
-    };
+const NavbarDesktopToggler = props => {
+    /**
+     * Props
+     */
+    const { onLogout } = props;
 
     /**
      * State, Refs, Callbacks
@@ -64,17 +63,41 @@ const NavbarDesktopToggler = () => {
             </div>
 
             <ul className={styles.dropdownMenu} ref={dropdownRef}>
-                <li>
-                    <a href="#">Donuts</a>
+                <li className="nav-item">
+                    <NavLink
+                        onClick={onCheckboxClick}
+                        activeClassName={styles.active}
+                        to={ROUTES.HOME_USERDASHBOARD}
+                        exact
+                    >
+                        <span>Home</span>
+                    </NavLink>
                 </li>
-                <li>
-                    <a href="#">Cupcakes</a>
-                </li>
-                <li>
-                    <a href="#">Chocolate</a>
+                {isLoggedIn ? (
+                    <li className="nav-item">
+                        <NavLink
+                            onClick={onCheckboxClick}
+                            activeClassName={styles.active}
+                            to={ROUTES.UPLOAD_FILE}
+                            exact
+                        >
+                            <span>Upload</span>
+                        </NavLink>
+                    </li>
+                ) : (
+                    <li className="nav-item">
+                        <NavLink onClick={onCheckboxClick} activeClassName={styles.active} to={ROUTES.ABOUT} exact>
+                            <span>Über</span>
+                        </NavLink>
+                    </li>
+                )}
+                <li className="nav-item">
+                    <NavLink onClick={onCheckboxClick} activeClassName={styles.active} to={ROUTES.ACCOUNT} exact>
+                        <span>Mein Account</span>
+                    </NavLink>
                 </li>
                 {isLoggedIn && (
-                    <li>
+                    <li className="nav-item pb-2">
                         <LoginLogoutButton onLogout={onLogout} isLoggedIn={isLoggedIn} />
                     </li>
                 )}

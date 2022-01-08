@@ -1,6 +1,8 @@
 const ROUTES = {
     HOME_USERDASHBOARD: '/',
-    UPLOAD_FILE: '/upload'
+    ABOUT: '/about',
+    UPLOAD_FILE: '/upload',
+    ACCOUNT: '/account'
 };
 
 export default ROUTES;

@@ -10,6 +10,9 @@ import 'css.gg/icons/css/pen.css';
 import 'css.gg/icons/css/user.css';
 import 'css.gg/icons/css/mail.css';
 import 'css.gg/icons/css/search.css';
+import 'css.gg/icons/css/profile.css';
+import 'css.gg/icons/css/home-alt.css';
+import 'css.gg/icons/css/info.css';
 
 const Icon = ({ iconType, additionalClassNames = '', additionalStyles = {}, size = {} }) => {
     let iconClass;
@@ -45,6 +48,18 @@ const Icon = ({ iconType, additionalClassNames = '', additionalStyles = {}, size
 
         case ICONTYPES.SEARCH:
             iconClass = ICONTYPES.SEARCH;
+            break;
+
+        case ICONTYPES.PROFILE:
+            iconClass = ICONTYPES.PROFILE;
+            break;
+
+        case ICONTYPES.HOME:
+            iconClass = ICONTYPES.HOME;
+            break;
+
+        case ICONTYPES.INFO:
+            iconClass = ICONTYPES.INFO;
             break;
 
         default:

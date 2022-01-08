@@ -6,7 +6,10 @@ const ICONTYPES = {
     EDIT_PEN: 'gg-pen',
     USER_ICON: 'gg-user',
     MAIL: 'gg-mail',
-    SEARCH: 'gg-search'
+    SEARCH: 'gg-search',
+    PROFILE: 'gg-profile',
+    HOME: 'gg-home-alt',
+    INFO: 'gg-info'
 };
 
 export default ICONTYPES;

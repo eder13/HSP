@@ -82,9 +82,11 @@
     top: calc(100% + 0.25rem);
     left: -80px;
 
+    width: 200px;
+
     display: none;
     padding: 0.5em 0;
-    background-color: #f4f4f4;
+    background-color: rgb(184, 198, 199);
     border-radius: 4px;
     box-shadow: 0 0.15em 0.25em rgba(black, 0.25);
     z-index: 99999999;
@@ -116,7 +118,6 @@
 .dropdown ul > li {
     margin: 0;
     list-style-type: none;
-    outline: 1px solid #333;
 }
 
 .dropdown ul > li a {
@@ -126,4 +127,13 @@
     color: #fff;
     font-size: 1.125rem;
     padding: 100%;
+}
+
+.active {
+    > span {
+        border-bottom: 3px solid rgb(255, 112, 75);
+        padding-bottom: 1px !important;
+        padding-left: 2px;
+        padding-right: 2px;
+    }
 }

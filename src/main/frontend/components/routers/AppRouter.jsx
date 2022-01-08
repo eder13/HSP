@@ -8,6 +8,7 @@ import ROUTES from './Routes';
 import { useSelector } from 'react-redux';
 import { selectLoggedIn } from '../../selectors/authSelector';
 import UserDashboardPage from '../sites/UserDashboardPage';
+import About from '../sites/About';
 
 const AppRouter = () => {
     /**
@@ -34,6 +35,10 @@ const AppRouter = () => {
             </div>
             <Switch>
                 <Route exact path={ROUTES.HOME_USERDASHBOARD} component={isLoggedIn ? UserDashboardPage : HomePage} />
+                {/* TODO: Implement About Page */}
+                <Route exact path={ROUTES.ABOUT} component={About} />
+                {/* TODO: Implement My Account Page (if not logged in, show signup, otherwise show account) */}
+                <Route exact path={ROUTES.ACCOUNT} component={null} />
                 <PrivateRoute exact path={ROUTES.UPLOAD_FILE} component={Dashboard} />
             </Switch>
         </BrowserRouter>

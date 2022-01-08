@@ -10,7 +10,6 @@
     font-family: 'Lobster', cursive;
     margin-left: 30px;
     @media only screen and (--XS) {
-        font-size: 40px;
         margin-left: 0;
     }
 }
@@ -27,6 +26,5 @@
 
     @media only screen and (--XS) {
         margin-left: 0;
-        font-size: 13px;
     }
 }

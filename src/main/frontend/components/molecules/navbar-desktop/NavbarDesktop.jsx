@@ -9,7 +9,12 @@ import Cookies from 'js-cookie';
 import styles from './NavbarDesktop.module.css';
 import Logo from '../../atoms/logo/Logo';
 
-const NavbarDesktop = () => {
+const NavbarDesktop = props => {
+    /**
+     * Props
+     */
+    const { onLogout } = props;
+
     /**
      * Selectors
      */
@@ -39,7 +44,7 @@ const NavbarDesktop = () => {
                                 )}
                             </li>
                             <li>
-                                <NavbarDesktopToggler />
+                                <NavbarDesktopToggler onLogout={onLogout} />
                             </li>
                         </ul>
                     </div>

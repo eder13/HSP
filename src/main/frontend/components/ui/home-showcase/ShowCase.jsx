@@ -9,13 +9,12 @@ const ShowCase = ({ isMobileNavDisplayed }) => {
     const imageStyles = cssClassNamesHelper(['img-fluid', styles.homeLandingImage, styles.homeLandingImageDesktop]);
 
     return (
-        <div className="jumbotron">
+        <div className="jumbotron pb-5">
             <div className="d-flex justify-content-center">
                 <Image className={imageStyles} image={image} alt="File Upload" />
             </div>
             <h1 className="display-5">Sharing and uploading data has never been so easy-</h1>
             <p className="lead">Login to join the community and get access to thousands of files!</p>
-            <hr />
         </div>
     );
 };
