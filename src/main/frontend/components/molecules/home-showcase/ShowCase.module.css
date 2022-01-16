@@ -1,0 +1,22 @@
+.emphasize {
+    color: rgb(255, 112, 75);
+}
+
+.title {
+    line-height: 1.4;
+    hyphens: auto;
+
+    @media only screen and (--LG) {
+        font-size: 2rem;
+    }
+
+    @media only screen and (--MD) {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+    }
+}
+
+.text {
+    line-height: 1.65;
+    font-size: 1.1rem;
+}

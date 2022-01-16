@@ -122,10 +122,3 @@
         color: rgb(255, 112, 75);
     }
 }
-
-/* For testing, remove afterwards */
-:root {
-    body {
-        height: 70000px;
-    }
-}

@@ -45,10 +45,10 @@ const NavbarDesktopToggler = props => {
             } else {
                 checkBoxRef.current.checked = false;
             }
-
-            return () => dropdownMenuObserver.disconnect();
         });
         dropdownMenuObserver.observe(dropdownRef.current);
+
+        return () => dropdownMenuObserver.disconnect();
     }, []);
 
     /**

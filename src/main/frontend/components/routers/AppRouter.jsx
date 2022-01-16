@@ -23,7 +23,8 @@ const AppRouter = () => {
         <BrowserRouter>
             <Navbar />
             {/* Page Divider */}
-            <div style={{ overflow: 'hidden', backgroundColor: 'rgb(242, 244, 254)' }}>
+            {/* TODO: Extract Page Divider in extra component */}
+            <div style={{ overflow: 'hidden', backgroundColor: 'rgba(184, 198, 199, 0.5)' }}>
                 <svg
                     preserveAspectRatio="none"
                     viewBox="0 0 1200 120"
