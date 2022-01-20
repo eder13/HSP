@@ -1,6 +1,6 @@
 const ROUTES = {
     HOME_USERDASHBOARD: '/',
-    ABOUT: '/about',
+    LEGAL: '/impressum',
     UPLOAD_FILE: '/upload',
     ACCOUNT: '/account'
 };

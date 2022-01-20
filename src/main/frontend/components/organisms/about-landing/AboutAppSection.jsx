@@ -1,8 +1,9 @@
 import React from 'react';
+import styles from './AboutAppSection.module.css';
 
 const AboutAppSection = () => {
     return (
-        <section className="pb-5" style={{ backgroundColor: 'rgb(242, 244, 254)' }}>
+        <section className={`pb-5 ${styles.section}`}>
             <div className="container">
                 <h2 className="text-center mb-5">Was macht das Projekt &quot;Geschichtewerkstatt Uni Graz&quot;?</h2>
 

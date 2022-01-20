@@ -4,6 +4,7 @@ import cssClassNamesHelper from '../../utils/cssClassNamesHelper';
 
 const Table = props => {
     const {
+        tableLayoutFixed = false,
         tableRowsAmount,
         tableCellsAmmount,
         tableCellDataOfCorrespondingRowArray,
@@ -29,7 +30,15 @@ const Table = props => {
         for (let rows = 0; rows < tableRowsAmount; rows++) {
             for (let column = 0; column < tableCellsAmmount; column++)
                 td.push(
-                    <td style={{ verticalAlign: 'middle' }} key={`${rows}-${column}`}>
+                    <td
+                        // FIXME: Overflow elipsis now on every first td in body active -> do in prop
+                        style={
+                            column === 0
+                                ? { overflow: 'hidden', textOverflow: 'ellipsis', verticalAlign: 'middle' }
+                                : { verticalAlign: 'middle' }
+                        }
+                        key={`${rows}-${column}`}
+                    >
                         {tableCellDataOfCorrespondingRowArray[rows][column]}
                     </td>
                 );
@@ -51,8 +60,13 @@ const Table = props => {
         !skeleton && 'table-striped'
     ]);
 
+    const styles = {
+        ...additionalStyles,
+        ...(tableLayoutFixed ? { tableLayout: 'fixed', width: '100%' } : {})
+    };
+
     return (
-        <table style={additionalStyles} className={tableStyles}>
+        <table style={styles} className={tableStyles}>
             {tableHeaderData ? <thead>{tableHeaderData}</thead> : null}
             <tbody>{render()}</tbody>
             {tableFooterData ? <thead>{tableFooterData}</thead> : null}

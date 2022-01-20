@@ -29,6 +29,15 @@
 
 /* Basic Styles for Icons Colors */
 .profileIcon {
+    &.disabled {
+        border-color: var(--secondary-color);
+
+        &::after,
+        &::before {
+            border-color: var(--secondary-color);
+        }
+    }
+
     border-color: black;
 
     &::after,
@@ -66,59 +75,97 @@
 
     &::after {
         background-color: black;
+        bottom: -1px;
+    }
+}
+
+.searchIcon {
+    margin-top: 0px;
+    border-color: black;
+
+    &::before {
+        border-color: black;
+    }
+
+    &::after {
+        background-color: black;
     }
 }
 
 .iconText {
     font-size: 12px;
     color: black;
+
+    &.disabledText {
+        color: var(--secondary-color);
+    }
 }
 
 /* Active Link class colorize Nav */
 .active {
     .profileIcon {
-        border-color: rgb(255, 112, 75);
+        border-color: var(--primary-color);
 
         &::after,
         &::before {
-            border-color: rgb(255, 112, 75);
+            border-color: var(--primary-color);
         }
     }
 
     .infoIcon {
-        border-color: rgb(255, 112, 75);
+        border-color: var(--primary-color);
 
         &::after,
         &::before {
-            background-color: rgb(255, 112, 75);
+            background-color: var(--primary-color);
         }
     }
 
     .uploadIcon {
-        border-color: rgb(255, 112, 75);
+        border-color: var(--primary-color);
 
         &::after {
-            border-color: rgb(255, 112, 75);
+            border-color: var(--primary-color);
         }
         &::before {
-            background-color: rgb(255, 112, 75);
+            background-color: var(--primary-color);
         }
     }
 
     .homeIcon {
-        border-color: rgb(255, 112, 75);
+        border-color: var(--primary-color);
 
         &::before {
-            border-color: rgb(255, 112, 75);
+            border-color: var(--primary-color);
         }
 
         &::after {
-            background-color: rgb(255, 112, 75);
+            background-color: var(--primary-color);
+            bottom: -1px;
         }
     }
 
     .iconText {
         font-size: 12px;
-        color: rgb(255, 112, 75);
+        color: var(--primary-color);
     }
+}
+
+/* Special Case for Active Search because it's a Button instead of Nav Link */
+.searchIconActive {
+    margin-top: 0px;
+    border-color: var(--primary-color);
+
+    &::before {
+        border-color: var(--primary-color);
+    }
+
+    &::after {
+        background-color: var(--primary-color);
+    }
+}
+
+.iconTextSearchActive {
+    font-size: 12px;
+    color: var(--primary-color);
 }

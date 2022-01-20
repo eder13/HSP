@@ -5,6 +5,11 @@ export const actionSetModal = data => ({
     payload: { ...data }
 });
 
+export const actionDismissModal = modalInstance => ({
+    type: ActionTypes.DISMISS_MODAL,
+    payload: { modalInstance }
+});
+
 export const actionResetModal = () => ({
     type: ActionTypes.RESET_MODAL
 });

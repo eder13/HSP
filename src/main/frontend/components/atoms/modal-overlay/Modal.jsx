@@ -1,5 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Modal as ModalBS } from 'bootstrap';
+import { useDispatch } from 'react-redux';
+import { actionResetModal } from '../../../actions/modalActions';
 
 const Modal = props => {
     /**
@@ -9,12 +11,16 @@ const Modal = props => {
     const $modalRef = useRef();
     const [modalInstance, setModalInstance] = useState(undefined);
 
+    const dispatch = useDispatch();
+
     /**
      * Lifecycle Hooks
      */
     useEffect(() => {
         if ($modalRef?.current) {
             const modalBS = new ModalBS($modalRef.current);
+            modalBS._config.backdrop = false;
+            modalBS._config.keyboard = false;
             setModalInstance(modalBS);
             onRegisterModal(modalBS);
         }
@@ -40,7 +46,11 @@ const Modal = props => {
                             className="btn-close"
                             disabled={disableClose}
                             aria-label="Close"
-                            onClick={() => modalInstance.hide()}
+                            onClick={async () => {
+                                modalInstance.hide();
+                                await new Promise(res => setTimeout(() => res(), 150));
+                                dispatch(actionResetModal());
+                            }}
                         ></button>
                     </div>
                     <div className="modal-body">{children}</div>

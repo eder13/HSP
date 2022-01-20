@@ -15,7 +15,7 @@
 
 .dropdown .hamburgerWrapper {
     position: relative;
-    background-color: rgb(184, 198, 199);
+    background-color: var(--secondary-color);
     width: 80px;
     height: 50px;
     border-radius: 26% 26% 26% 26% / 50% 50% 50% 50%;
@@ -131,7 +131,7 @@
 
 .active {
     > span {
-        border-bottom: 3px solid rgb(255, 112, 75);
+        border-bottom: 3px solid var(--primary-color);
         padding-bottom: 1px !important;
         padding-left: 2px;
         padding-right: 2px;

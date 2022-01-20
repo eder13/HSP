@@ -8,6 +8,12 @@ const modal = (state = {}, action) => {
             };
         }
 
+        case ActionTypes.DISMISS_MODAL: {
+            const { modalInstance } = payload;
+            modalInstance.hide();
+            return {};
+        }
+
         case ActionTypes.RESET_MODAL: {
             return {};
         }

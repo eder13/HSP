@@ -25,7 +25,7 @@ export const getDownloadTableData = data => {
         download?.name,
         parseSQLDateToJavaScript(download?.createdOn),
         'Maximilian LangerNameWiederHier',
-        <a key={download?.id} /*className={styles.downloadLinkButton}*/ href={`/download/${download?.fileName}`}>
+        <a key={download?.id} href={`/download/${download?.fileName}`}>
             <Icon iconType={ICONTYPES.DOWNLOAD} size={ICONSIZE.SIZE_1_5X} additionalStyles={{ top: '4px' }} />
         </a>
     ]);

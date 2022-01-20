@@ -1,0 +1,5 @@
+export const MODAL_TYPE = {
+    UPLOAD: 'UPLOAD',
+    DOWNLOAD: 'DOWNLOAD',
+    MOBILE_SEARCH: 'MOBILE_SEARCH'
+};

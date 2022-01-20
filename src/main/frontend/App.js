@@ -11,7 +11,8 @@ import clientSystemInfo from './reducers/clientReducer';
 import modal from './reducers/modalReducer';
 import AppRouter from './components/routers/AppRouter';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.min.js'; // TODO: Only Import JS Bootstrap that's needed
+import 'bootstrap/dist/js/bootstrap.min.js';
+import './css/variables.css';
 
 const store = configureStore({
     reducer: {

@@ -1,5 +1,5 @@
 .searchFormInput {
-    background-color: rgb(184, 198, 199); /* TODO: Define this color as $primary-light ? */
+    background-color: var(--secondary-color);
     border-radius: 10% 10% 10% 10% / 85% 85% 85% 85%;
     padding: 10px 6rem 10px 3rem;
 }

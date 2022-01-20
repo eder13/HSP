@@ -1,5 +1,5 @@
 .title {
-    margin-top: 2rem;
+    margin-top: 4rem;
     margin-bottom: 4rem;
 }
 
@@ -10,13 +10,37 @@
 }
 
 .tableHeaderTr {
-    color: white;
-    background-color: #2196f3;
+    color: black;
+    background-color: var(--secondary-color);
     border-bottom: 3px solid #333;
 }
 
 .tableHeaderTd {
     vertical-align: 'middle';
+}
+
+.tableHeaderTdName {
+    vertical-align: 'middle';
+
+    @media only screen and (--XS) {
+        width: calc(100vw - 190px);
+    }
+}
+
+.tableHeaderTdUploadDate {
+    vertical-align: 'middle';
+
+    @media only screen and (--XS) {
+        width: 85px;
+    }
+}
+
+.tableHeaderTdActions {
+    vertical-align: 'middle';
+
+    @media only screen and (--XS) {
+        width: 56px;
+    }
 }
 
 .tableHeaderTdInner {

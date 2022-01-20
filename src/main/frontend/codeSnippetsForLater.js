@@ -1,6 +1,5 @@
 //import editIcon from '../../assets/edit_icon.png';
 
-// TODO: User Card for Information Corner
 /* const userCard = (
     <div>
         <div className="card">
@@ -40,7 +39,6 @@
                 /> */
 }
 
-// TODO: Refactor Edit Stuff with an Overlay
 /*const actionButtonEditActive = (
         <>
             <Button variant={BUTTON_VARIANT.BTN_SUCCESS} additionalStyles={{ margin: '5px' }}>

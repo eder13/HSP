@@ -8,7 +8,8 @@ import ROUTES from './Routes';
 import { useSelector } from 'react-redux';
 import { selectLoggedIn } from '../../selectors/authSelector';
 import UserDashboardPage from '../sites/UserDashboardPage';
-import About from '../sites/About';
+import Legal from '../sites/Legal';
+import MaterialListing from '../sites/MaterialListing';
 
 const AppRouter = () => {
     /**
@@ -20,11 +21,17 @@ const AppRouter = () => {
      * Render
      */
     return (
+        /* TODO: onPage Transition Scroll to Top of page */
         <BrowserRouter>
             <Navbar />
-            {/* Page Divider */}
-            {/* TODO: Extract Page Divider in extra component */}
-            <div style={{ overflow: 'hidden', backgroundColor: 'rgba(184, 198, 199, 0.5)' }}>
+            {/* Page Divider Navbar */}
+            <div
+                style={
+                    isLoggedIn
+                        ? { overflow: 'hidden', backgroundColor: 'rgb(242, 244, 254)' }
+                        : { overflow: 'hidden', backgroundColor: 'rgba(184, 198, 199, 0.5)' }
+                }
+            >
                 <svg
                     preserveAspectRatio="none"
                     viewBox="0 0 1200 120"
@@ -35,11 +42,9 @@ const AppRouter = () => {
                 </svg>
             </div>
             <Switch>
-                <Route exact path={ROUTES.HOME_USERDASHBOARD} component={isLoggedIn ? UserDashboardPage : HomePage} />
-                {/* TODO: Implement About Page */}
-                <Route exact path={ROUTES.ABOUT} component={About} />
-                {/* TODO: Implement My Account Page (if not logged in, show signup, otherwise show account) */}
-                <Route exact path={ROUTES.ACCOUNT} component={null} />
+                <Route exact path={ROUTES.HOME_USERDASHBOARD} component={isLoggedIn ? MaterialListing : HomePage} />
+                <Route exact path={ROUTES.LEGAL} component={Legal} />
+                <PrivateRoute exact path={ROUTES.ACCOUNT} component={UserDashboardPage} />
                 <PrivateRoute exact path={ROUTES.UPLOAD_FILE} component={Dashboard} />
             </Switch>
         </BrowserRouter>

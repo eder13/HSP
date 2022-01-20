@@ -1,5 +1,5 @@
 .emphasize {
-    color: rgb(255, 112, 75);
+    color: var(--primary-color);
 }
 
 .title {

@@ -19,9 +19,15 @@ const LaddaButton = props => {
 
     useEffect(() => {
         if (startLoading !== null && stopLoading !== null) {
-            onStartStopLoadingCb({ startLoading, stopLoading });
+            if (disabled) {
+                startLoading();
+            } else {
+                stopLoading();
+            }
+
+            //onStartStopLoadingCb({ startLoading, stopLoading });
         }
-    }, [startLoading, stopLoading]);
+    }, [startLoading, stopLoading, disabled]);
 
     return (
         <Button

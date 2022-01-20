@@ -1,9 +1,8 @@
-/* TODO: Download the fonts locally to the server and place inside static folder  */
 @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Mansalva&display=swap');
 
 .logo {
-    color: rgb(255, 112, 75);
+    color: var(--primary-color);
     font-weight: 300;
     font-size: 50px;
     line-height: 0.65;

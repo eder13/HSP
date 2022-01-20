@@ -28,7 +28,6 @@ const Navbar = () => {
     /**
      * Callback Functions
      */
-    // TODO: onLogout for NavbarDesktops dropdown
     const onLogout = async () => {
         const req = await fetch('/logout', { method: 'post', headers: { 'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN') } });
         await req.ok;

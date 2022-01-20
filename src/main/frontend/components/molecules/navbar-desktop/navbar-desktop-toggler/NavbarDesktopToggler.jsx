@@ -86,14 +86,19 @@ const NavbarDesktopToggler = props => {
                     </li>
                 ) : (
                     <li className="nav-item">
-                        <NavLink onClick={onCheckboxClick} activeClassName={styles.active} to={ROUTES.ABOUT} exact>
-                            <span>Über</span>
+                        <NavLink onClick={onCheckboxClick} activeClassName={styles.active} to={ROUTES.LEGAL} exact>
+                            <span>Impressum</span>
                         </NavLink>
                     </li>
                 )}
                 <li className="nav-item">
-                    <NavLink onClick={onCheckboxClick} activeClassName={styles.active} to={ROUTES.ACCOUNT} exact>
-                        <span>Mein Account</span>
+                    <NavLink
+                        onClick={isLoggedIn ? onCheckboxClick : false}
+                        activeClassName={isLoggedIn ? styles.active : ''}
+                        to={isLoggedIn ? ROUTES.ACCOUNT : '#'}
+                        exact
+                    >
+                        <span style={!isLoggedIn ? { color: 'gray', cursor: 'not-allowed' } : {}}>Mein Account</span>
                     </NavLink>
                 </li>
                 {isLoggedIn && (
