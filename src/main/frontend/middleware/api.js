@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import Cookies from 'js-cookie';
-import API_ENDPOINTS from './endpoints';
+import API_ENDPOINTS, { HTTP_METHOD } from './APIHelper';
 
 export const api = createApi({
     reducerPath: 'api',
@@ -26,7 +26,7 @@ export const api = createApi({
         patchUserUploadsById: builder.mutation({
             query: ({ id, body }) => ({
                 url: id.includes('http') ? id : `/uploads/${id}`,
-                method: 'PATCH',
+                method: HTTP_METHOD.PATCH,
                 body,
                 headers: {
                     Accept: 'application/json',

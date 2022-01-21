@@ -140,6 +140,7 @@ const UploadsTable = () => {
                             footer={<small>Diese Aktion kann nicht rückgängig gemacht werden!</small>}
                             disableClose={isSubmitting}
                         >
+                            {/* TODO: Outsource this big Formik Component to "EditUploadFormik.jsx" */}
                             <Formik
                                 enableReinitialize={true}
                                 initialValues={formFields}
@@ -166,11 +167,11 @@ const UploadsTable = () => {
                                             </div>
                                         )}
                                     </ErrorMessage>
-                                    <label for="uploadName" class="form-label">
+                                    <label htmlFor="uploadName" className="form-label">
                                         Neuer Upload Name:
                                     </label>
                                     <Field
-                                        class="form-control mb-3"
+                                        className="form-control mb-3"
                                         id="uploadName"
                                         type="text"
                                         name={getPropertyAsString(formFields, formFields.title)}

@@ -9,7 +9,7 @@ const LaddaButton = props => {
     /**
      * Props, Refs
      */
-    const { disabled, children, onStartStopLoadingCb } = props;
+    const { disabled = false, children } = props;
     const $laddaBtnRef = useRef();
 
     /**
@@ -46,8 +46,7 @@ const LaddaButton = props => {
 
 LaddaButton.propTypes = {
     disabled: PropTypes.bool.isRequired,
-    children: PropTypes.any,
-    onStartStopLoadingCb: PropTypes.func.isRequired
+    children: PropTypes.any
 };
 
 export default LaddaButton;

@@ -11,6 +11,7 @@ import {
 import NavbarDesktop from '../../molecules/navbar-desktop/NavbarDesktop';
 import NavbarMobile from '../../molecules/navbar-mobile/NavbarMobile';
 import Cookies from 'js-cookie';
+import API_ENDPOINTS, { getDefaultHeader, HTTP_METHOD } from '../../../middleware/APIHelper';
 
 const Navbar = () => {
     /**
@@ -29,7 +30,7 @@ const Navbar = () => {
      * Callback Functions
      */
     const onLogout = async () => {
-        const req = await fetch('/logout', { method: 'post', headers: { 'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN') } });
+        const req = await fetch(API_ENDPOINTS.LOGOUT, { method: HTTP_METHOD.POST, headers: getDefaultHeader() });
         await req.ok;
         window.location.href = process.env.DOMAIN_URL;
     };

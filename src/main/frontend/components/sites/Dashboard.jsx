@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import Reaptcha from 'reaptcha';
-
-/// TODO: Remove this, this is just for demonstration purposes
+import API_ENDPOINTS, { getDefaultHeader, HTTP_METHOD } from '../../middleware/APIHelper';
+import { stringify } from 'query-string';
+import axios from 'axios';
+import UploadMultistepForm from '../organisms/upload/UploadMultistepForm';
 
 const Dashboard = () => {
     const [isSelected, setIsSelected] = useState(false);
@@ -15,41 +17,39 @@ const Dashboard = () => {
         const formData = new FormData();
         formData.append('file', input.files[0]);
 
-        /*try {
+        try {
             const result = await axios.post('/upload', formData, {
                 headers: {
-                    'Content-Type': 'multipart/mixed',
+                    ...getDefaultHeader(),
+                    'Content-Type': 'multipart/mixed'
                 },
-                onUploadProgress: (progressEvent) => {
-                    const percentCompleted = Math.round(
-                        (progressEvent.loaded * 100) / progressEvent.total
-                    );
+                onUploadProgress: progressEvent => {
+                    const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                     console.log(percentCompleted);
-                },
+                }
             });
             console.log('Success:', result);
-        } catch (e) {
-            console.log('Error:', e);
-        }*/
+        } catch (error) {
+            console.log('Error:', error);
+        }
     };
 
     const onVerify = async recaptchaResponse => {
-        /*try {
-            const result = await axios.post('/captcha', '', {
-                params: {
-                    'g-recaptcha-response': recaptchaResponse,
-                },
-            });
-            setIsValidated(true);
-            console.log(result);
-        } catch (e) {
-            console.log(e);
-            setIsValidated(false);
-        }*/
-    };
+        const params = {
+            'g-recaptcha-response': recaptchaResponse
+        };
 
-    const onExpire = () => {
-        console.log('Check expired, please validate again');
+        try {
+            const req = await fetch(`${API_ENDPOINTS.CAPTCHA}?${stringify(params)}`, {
+                method: HTTP_METHOD.POST,
+                headers: getDefaultHeader()
+            });
+            await req.json();
+            setIsValidated(true);
+        } catch (e) {
+            console.log('Failed To Validate Captcha!', e);
+            setIsValidated(false);
+        }
     };
 
     const onError = () => {
@@ -57,15 +57,14 @@ const Dashboard = () => {
     };
 
     return (
-        <>
-            <form onSubmit={handleSubmission}>
+        <main style={{ backgroundColor: 'rgb(242, 244, 254)' }}>
+            <div className="container">
+                <UploadMultistepForm />
+            </div>
+
+            {/* <form onSubmit={handleSubmission}>
                 {!isValidated && (
-                    <Reaptcha
-                        sitekey={process.env.CAPTCHA_SITE_KEY}
-                        onVerify={onVerify}
-                        onExpire={onExpire}
-                        onError={onError}
-                    />
+                    <Reaptcha sitekey={process.env.CAPTCHA_SITE_KEY} onVerify={onVerify} onError={onError} />
                 )}
 
                 {!isSelected && (
@@ -83,8 +82,8 @@ const Dashboard = () => {
                 </div>
             </form>
 
-            <a href={'/download/1626904069169_cct_bestaetigung.pdf'}>download</a>
-        </>
+            <a href={'/download/1642788153372_UNO_Srebrenica.pdf'}>download</a> */}
+        </main>
     );
 };
 
